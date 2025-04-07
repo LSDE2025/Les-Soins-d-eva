@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Les Soins - Les Soins d’Eva</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    
+    
+     <!-- HEADER ORDI -->
+     <div class="top-border"></div> <!-- Bande en haut -->
+     <a href="Accueil.html">
+         <img src="images/entete.png" alt="Entête" class="entete-img">
+     </a>
+     <div class="bottom-border"></div>
+     <nav class="menu-container">
+     <ul class="menu">
+         <li><a href="Accueil.html">Accueil</a></li>
+         <li><a href="A-propos-d-Eva.html">À propos d'Eva</a></li>
+         <li class="dropdown">
+             <a href="Les-Soins.html" class="dropdown-link">Les Soins</a>
+             <span class="arrow" onclick="toggleMenu()">&#9662;</span>
+             <ul class="submenu">
+                 <li><a href="Soins-Facialistes.html">Soins Facialistes</a></li>
+                 <li><a href="Soins-du-Corps.html">Le Corps</a></li>
+                 <li><a href="Cours-et-Protocoles.html">Cours et Protocoles</a></li>
+             </ul>
+         </li>
+         <li><a href="Reservation-choix-du-lieu.html">Réservation</a></li>
+         <li><a href="Foire-aux-questions.html">FAQ</a></li>
+         <li><a href="Contact.html">Contact</a></li>
+     </ul>
+ </nav>
+
+
+ 
+     <!-- HEADER SMARTPHONE -->
+     <header class="header">
+         <div class="menu-toggle" id="menu-toggle">
+             &#9776; <!-- Icône burger -->
+         </div>
+     </header>
+     
+     <nav class="sidebar" id="sidebar">
+         <div class="close-btn-menu" id="close-btn">&times;</div>
+         <ul>
+             <li><a href="Accueil.html">Accueil</a></li>
+             <li><a href="A-propos-d-Eva.html">À propos d'Eva</a></li>
+             <li class="dropdownsmart">
+                 <div class="soin-arrow"></div>
+                 <a href="Les-Soins.html" class="dropdown-link-smart">
+                     Les Soins </a>
+                     <span class="arrowsmart">&#9662;</span> 
+                 </div>
+                        <ul class="submenusmart">
+                     <li><a href="Soins-Facialistes.html">Soins Facialistes</a></li>
+                     <li><a href="Soins-du-Corps.html">Le Corps</a></li>
+                     <li><a href="Cours-et-Protocoles.html">Cours et Protocoles</a></li>
+                 </ul>
+             </li>
+                       
+             <li><a href="Reservation-choix-du-lieu.html">Réservation</a></li>
+             <li><a href="Foire-aux-questions.html">FAQ</a></li>
+             <li><a href="Contact.html">Contact</a></li>
+             <li><img src="images/logo-soleil.png" alt="Logo décoratif" class="method-logo2"></li>
+         </ul>
+     </nav>
+
+
+
+     
+
+<!-- LES SOINS -->
+<div class="les-soins-page-container">
+    <div class="content-page">
+        <!-- Image gauche -->
+        <div class="image-container">
+            <img src="images/PhotosLES_SOINS.png" alt="Illustration des soins" class="image-les-soins">
+        </div>
+
+        <div class="text-container">
+            <!-- Titre -->
+             <div class="titre-soins-container">
+                <p class="titrepage-les-soins">Les Soins</p>
+            </div>
+
+            <!-- Sous-titres -->
+            <div class="subtitles-soin">
+                <a href="Soins-Facialistes.html" class="subtitle-soins"><span class=tilde>~</span> Soins Facialistes <span class=tilde>~</span></a>
+                <a href="Soins-du-Corps.html" class="subtitle-soins"><span class=tilde>~</span> Le corps <span class=tilde>~</span></a>
+                <a href="Cours-et-Protocoles.html" class="subtitle-soins"><span class=tilde>~</span> Cours & Protocoles <span class=tilde>~</span></a>
+            </div>
+        </div>
+
+        <!-- Image droite -->
+        <div class="soleil-soins-container">
+        <img src="images/soleil-dore-gauche.png" alt="Demi soleil doré" class="soleil-les-soins">
+        </div>
+
+        <div class="image-mobile-container">
+            <img src="images/les-soins-mobile.png" alt="Illustration des soins" class="image-les-soins-mobile">
+        </div>
+    </div>
+</div>
+
+
+
+
+
+    <!-- Pied de page -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="logo-pied">
+                <img src="images/soleil-dore.png" alt="Logo demi soleil doré" class="logodore">
+            </div>
+            <div class="mentions-legales">
+                <a href="Mentions-Legales.html">Mentions légales</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="header.js"></script>
+    <script src="header-smartphone.js"></script>
+
+</body>
+</html>

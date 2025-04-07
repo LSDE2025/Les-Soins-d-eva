@@ -1,0 +1,228 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    text-align: center;
+}
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #6A534E;
+    color: white;
+    padding: 20px;
+}
+.logout-button {
+    background-color: white;
+    color: #6A534E;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#month-name {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 20px;
+    margin: 0 20px;
+}
+
+#calendar-container {
+    width: 70%;
+    margin: 30px auto 30px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#month-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+#prev-month, #next-month {
+    font-size: 15px; 
+    margin: 0 20px;
+    background: transparent; 
+    border: none; 
+    cursor: pointer;
+    padding: 0; 
+}
+
+#prev-month:hover, #next-month:hover {
+    opacity: 0.7;
+}
+
+#calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    text-align: center;
+}
+
+.day-header {
+    font-weight: bold;
+    padding: 10px;
+    text-align: center;
+
+}
+
+.empty-day {
+    visibility: hidden;
+}
+
+.day-button {
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.day-button:hover {
+    background: rgb(106, 83, 78);
+    color: white;
+}
+
+.day-button.selected {
+    background: rgb(106, 83, 78);
+    color: white;
+    font-weight: bold;
+}
+
+table {
+    width: 80%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    margin-bottom: 50px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+td.action-column {
+    text-align: center;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+tr {
+    border-bottom: 1px solid #ddd;
+}
+
+tr:last-child {
+    border-bottom: none;
+}
+
+/* Style pour la ligne "Bloquer la journée entière" */
+.block-day-row {
+    text-align: center;
+    font-weight: bold;
+    padding: 15px 0;
+}
+
+/* Style pour les boutons Lieux */
+#location-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    margin-bottom: 10px;
+    margin-top: 30px;
+}
+
+#location-buttons button {
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 15px 20px;
+    border-radius: 20px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    text-transform: uppercase;
+    font-size: 16px;
+    transition: background 0.3s, color 0.3s;
+}
+
+#location-buttons button:hover {
+    background: rgb(106, 83, 78);
+    color: white;
+}
+
+#location-buttons button.selected {
+    background: rgb(106, 83, 78);
+    color: white;
+    font-weight: bold;
+}
+
+/* Style pour le bouton "Modifier tous les créneaux" */
+#modifier-tous {
+    background: rgb(106, 83, 78);
+    color: white;
+    text-transform: uppercase;
+    border-radius: 20px;
+    font-size: 12px;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+}
+
+#modifier-tous:hover {
+    background-color: #700000 !important; 
+}
+
+/* Style pour le bouton "Sélectionner tout" */
+#select-all {
+    background: rgb(195, 195, 195);
+    color: black;
+    text-transform: uppercase;
+    border-radius: 20px;
+    font-size: 12px;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+}
+
+#select-all:hover {
+    background: rgb(155, 155, 155);
+}
+
+/* Style pour le bouton Modifier Créneau */
+
+button.modifier-creneau {
+    background: rgb(106, 83, 78);
+    color: white;
+    text-transform: uppercase;
+    border-radius: 20px;
+    font-size: 12px;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+}
+
+button.modifier-creneau:hover {
+    background-color: #700000 !important; 
+}
+
+#slot.text {
+    background-color: red; /* Exemple de style */
+    color: white;
+    cursor: not-allowed;
+}
+
+
+
+
+

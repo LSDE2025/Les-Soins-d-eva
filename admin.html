@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Les Soins d'Eva - Admin</title>
+    <link rel="stylesheet" href="styleadmin.css">
+
+</head>
+<body>
+
+
+    <header class="admin-header">
+        <h1>Les Soins d'Eva - Administrateur</h1>
+        <button class="logout-button">Déconnexion</button>
+    </header>
+    
+    <main>
+
+        <div id="location-buttons">
+            <button id="btn-paris">Paris</button>
+            <button id="btn-bandol">Bandol</button>
+        </div>        
+
+       <!-- Bloc Calendrier -->
+<div id="calendar-container">
+    <div id="month-controls">
+        <button id="prev-month">&#9664;</button>
+        <span id="month-name"></span>
+        <button id="next-month">&#9654;</button>
+    </div>
+    <div id="calendar"></div>
+</div>
+
+<!-- Tableau des créneaux (hidden until a day is selected) -->
+<div id="timeSlotsTable" style="display:none;">
+    <h2 id="dayTitle"></h2>
+    <table id="slotsTable">
+        <thead>
+            <tr>
+                <th>Horaire</th>
+                <th>État</th>
+                <th>Client / Prestation</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="slotsBody"></tbody>
+    </table>
+</div>
+
+
+
+    </main>
+
+    <script src="admin.js"></script>
+    <script src="https://kit.fontawesome.com/cde74a57e6.js" crossorigin="anonymous"></script>
+</body>
+</html>

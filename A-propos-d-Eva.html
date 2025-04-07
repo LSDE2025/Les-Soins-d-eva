@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>À propos d'Eva - Les Soins d’Eva</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+   
+      
+    <style>
+        .headerordi {
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background-color: rgb(106, 83, 78); 
+        }
+
+        body {
+            padding-top: 280px; 
+        }
+    
+        .entete-img, .menu a {
+        transition: height 0.5s ease-in-out, width 0.5s ease-in-out, font-size 0.5s ease-in-out;
+        }
+
+        .scrolling-down .entete-img, 
+        .scrolling-down, 
+        .scrolling-down .menu a {
+        transition-duration: 0.8s;
+        }
+        @media (max-width: 600px) {
+    .headerordi {
+        position: static; /* Ne plus être fixe */
+        background-color: rgb(106, 83, 78); /* Garde la couleur */
+    }
+
+    body {
+        padding-top: 0; /* Supprime l’espace réservé */
+    }
+
+    /* Annule les animations */
+    .entete-img, .menu a {
+        transition: none !important;
+    }
+    }
+    </style>
+
+<script>
+const screenWidth = document.documentElement.clientWidth;
+let lastScrollY = window.scrollY;
+
+    window.addEventListener("scroll", function() {
+        const headerordi = document.querySelector(".headerordi");
+        const enteteImg = document.querySelector(".entete-img");
+        const menuItems = document.querySelectorAll(".menu a");
+
+        if (window.scrollY > lastScrollY) {
+            // Scrolling vers le bas → Animation plus lente (0.8s)
+            document.body.classList.add("scrolling-down");
+        } else {
+            // Scrolling vers le haut → Animation plus rapide (0.5s)
+            document.body.classList.remove("scrolling-down");
+        }
+
+        if (window.scrollY > 50) {
+            enteteImg.style.height = "110px";
+            enteteImg.style.width = "auto";
+
+            menuItems.forEach(item => {
+                item.style.fontSize = "12px";
+            });
+
+            headerordi.style.backgroundColor = "rgb(106, 83, 78)";
+        } else {
+            enteteImg.style.height = "170px";
+            enteteImg.style.width = "auto";
+
+            menuItems.forEach(item => {
+                item.style.fontSize = "";
+            });
+
+        }
+
+        lastScrollY = window.scrollY;
+    });
+</script>
+
+
+
+
+
+
+    
+    <!-- HEADER ORDI -->
+<div class="headerordi">
+    <div class="top-border"></div> <!-- Bande en haut -->
+    <a href="Accueil.html">
+        <img src="images/entete.png" alt="Entête" class="entete-img">
+    </a>
+    <div class="bottom-border"></div>
+    <nav class="menu-container">
+    <ul class="menu">
+        <li><a href="Accueil.html">Accueil</a></li>
+        <li><a href="A-propos-d-Eva.html">À propos d'Eva</a></li>
+        <li class="dropdown">
+            <a href="Les-Soins.html" class="dropdown-link">Les Soins</a>
+            <span class="arrow" onclick="toggleMenu()">&#9662;</span>
+            <ul class="submenu">
+                <li><a href="Soins-Facialistes.html">Soins Facialistes</a></li>
+                <li><a href="Soins-du-Corps.html">Le Corps</a></li>
+                <li><a href="Cours-et-Protocoles.html">Cours et Protocoles</a></li>
+            </ul>
+        </li>
+        <li><a href="Reservation-choix-du-lieu.html">Réservation</a></li>
+        <li><a href="Foire-aux-questions.html">FAQ</a></li>
+        <li><a href="Contact.html">Contact</a></li>
+    </ul>
+    </nav>
+</div>
+
+
+
+      <!-- HEADER SMARTPHONE -->
+      <header class="header">
+          <div class="menu-toggle" id="menu-toggle">
+              &#9776; <!-- Icône burger -->
+          </div>
+      </header>
+      
+      <nav class="sidebar" id="sidebar">
+          <div class="close-btn" id="close-btn">&times;</div>
+          <ul>
+              <li><a href="Accueil.html">Accueil</a></li>
+              <li><a href="A-propos-d-Eva.html">À propos d'Eva</a></li>
+              <li class="dropdownsmart">
+                  <div class="soin-arrow"></div>
+                  <a href="Les-Soins.html" class="dropdown-link-smart">
+                      Les Soins </a>
+                      <span class="arrowsmart">&#9662;</span> <!-- Flèche séparée pour le clic -->
+                  </div>
+                                      <ul class="submenusmart">
+                      <li><a href="Soins-Facialistes.html">Soins Facialistes</a></li>
+                      <li><a href="Soins-du-Corps.html">Le Corps</a></li>
+                      <li><a href="Cours-et-Protocoles.html">Cours et Protocoles</a></li>
+                  </ul>
+              </li>
+                        
+              <li><a href="Reservation-choix-du-lieu.html">Réservation</a></li>
+              <li><a href="Foire-aux-questions.html">FAQ</a></li>
+              <li><a href="Contact.html">Contact</a></li>
+              <li><img src="images/logo-soleil.png" alt="Logo décoratif" class="method-logo2"></li>
+          </ul>
+      </nav>
+    
+      <section id="expertise-section">
+        <div class="expertise-container">
+            
+            <p class="expertise-intro">
+                Bienvenue dans l'univers Les Soins d’Eva, où chaque geste est pensé pour révéler votre éclat.
+            </p>
+    
+            <div class="expertisetitle-container">
+                <h2 class="expertise-title">MON EXPERTISE</h2>
+            </div>
+                                        
+            <div class="expertise-wrapper">
+                <div class="expertise-image">
+                    <img src="images/PhotoEVA_aPropos.png" alt="Photo de soin">
+                </div>
+    
+                <div class="expertise-content">
+                    <h3 class="expertise-subtitle">Le Drainage Lymphatique</h3>
+                    <p class="expertise-text-1">
+                        Formée à la méthode Renata França, je propose un drainage idéal pour affiner la silhouette,<br> 
+                        alléger les jambes et améliorer la récupération musculaire.
+                    </p>
+    
+                    <h3 class="expertise-subtitle">Le Massage "Lomi Lomi"</h3>
+                    <p class="expertise-text-2">
+                        Inspiré des traditions hawaïennes, ce soin libère les tensions et rééquilibre l’énergie,<br> 
+                        offrant une profonde relaxation.
+                    </p>
+    
+                    <h3 class="expertise-subtitle">Les Soins Facialistes</h3>
+                    <p class="expertise-text-3">
+                        Spécialiste du massage du visage, je combine différentes techniques manuelles pour sculpter, raffermir et illuminer la peau. 
+                        Formée au yoga facial et à l’auto-massage auprès de Sylvie Lefranc, j’interviens sur les <span class=chiffre>50</span> muscles du visage grâce 
+                        au drainage lymphatique facial, qui favorise l’élimination des toxines et réduit les poches et cernes. 
+                        Mon expertise inclut également le massage intra-oral (face sculpting), une alternative naturelle aux injections, 
+                        pour un effet liftant et repulpant.
+                    </p>
+                </div>
+            </div>
+    
+            <div class="expertise-decoration-container">
+                <img src="images/soleil-marron-droite.png" alt="Soleil décoration" class="expertise-decoration">
+            </div>
+
+            <div class="quote-container">
+                <span class="quote-icon1"><img src="images/guillemet-ouvert-marron.png" alt="Guillemet ouvert"></span>
+                <p class="quote-text">
+                    Mon objectif est d'accompagner chaque femme, quel que soit son âge, à renouer avec son corps, et à révéler sa beauté naturelle grâce à des soins experts et entièrement manuels.
+                </p>
+                <span class="quote-icon2"><img src="images/guillemet-ferme-marron.png" alt="Guillemet fermé"></span>
+            </div>
+                            
+        </div>
+    </section>
+        
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Pied de page -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="logo-pied">
+                <img src="images/soleil-dore.png" alt="Logo demi soleil doré" class="logodore">
+            </div>
+            <div class="mentions-legales">
+                <a href="Mentions-Legales.html">Mentions légales</a>
+            </div>
+        </div>
+    </footer>
+
+<script src="header.js"></script>
+<script src="header-smartphone.js"></script>
+
+</body>
+</html>

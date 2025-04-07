@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Réservation - Les Soins d’Eva</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+
+        
+    <style>
+        .headerordi {
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background-color: rgb(106, 83, 78); 
+        }
+
+        body {
+            padding-top: 280px; 
+        }
+    
+        .entete-img, .menu a {
+        transition: height 0.5s ease-in-out, width 0.5s ease-in-out, font-size 0.5s ease-in-out;
+        }
+
+        .scrolling-down .entete-img, 
+        .scrolling-down, 
+        .scrolling-down .menu a {
+        transition-duration: 0.8s;
+        }
+        @media (max-width: 600px) {
+    .headerordi {
+        position: static; 
+        background-color: rgb(106, 83, 78); 
+    }
+
+    body {
+        padding-top: 0; 
+    }
+
+    /* Annule les animations */
+    .entete-img, .menu a {
+        transition: none !important;
+    }
+    }
+    </style>
+
+<script>
+const screenWidth = document.documentElement.clientWidth;
+let lastScrollY = window.scrollY;
+
+    window.addEventListener("scroll", function() {
+        const headerordi = document.querySelector(".headerordi");
+        const enteteImg = document.querySelector(".entete-img");
+        const menuItems = document.querySelectorAll(".menu a");
+
+        if (window.scrollY > lastScrollY) {
+            // Scrolling vers le bas → Animation plus lente (0.8s)
+            document.body.classList.add("scrolling-down");
+        } else {
+            // Scrolling vers le haut → Animation plus rapide (0.5s)
+            document.body.classList.remove("scrolling-down");
+        }
+
+        if (window.scrollY > 50) {
+            enteteImg.style.height = "110px";
+            enteteImg.style.width = "auto";
+
+            menuItems.forEach(item => {
+                item.style.fontSize = "12px";
+            });
+
+            headerordi.style.backgroundColor = "rgb(106, 83, 78)";
+        } else {
+            enteteImg.style.height = "170px";
+            enteteImg.style.width = "auto";
+
+            menuItems.forEach(item => {
+                item.style.fontSize = "";
+            });
+
+        }
+
+        lastScrollY = window.scrollY;
+    });
+</script>
+
+
+    
+    <!-- HEADER ORDI -->
+<div class="headerordi">
+    <div class="top-border"></div> <!-- Bande en haut -->
+    <a href="Accueil.html">
+        <img src="images/entete.png" alt="Entête" class="entete-img">
+    </a>
+    <div class="bottom-border"></div>
+    <nav class="menu-container">
+    <ul class="menu">
+        <li><a href="Accueil.html">Accueil</a></li>
+        <li><a href="A-propos-d-Eva.html">À propos d'Eva</a></li>
+        <li class="dropdown">
+            <a href="Les-Soins.html" class="dropdown-link">Les Soins</a>
+            <span class="arrow" onclick="toggleMenu()">&#9662;</span>
+            <ul class="submenu">
+                <li><a href="Soins-Facialistes.html">Soins Facialistes</a></li>
+                <li><a href="Soins-du-Corps.html">Le Corps</a></li>
+                <li><a href="Cours-et-Protocoles.html">Cours et Protocoles</a></li>
+            </ul>
+        </li>
+        <li><a href="Reservation-choix-du-lieu.html">Réservation</a></li>
+        <li><a href="Foire-aux-questions.html">FAQ</a></li>
+        <li><a href="Contact.html">Contact</a></li>
+    </ul>
+    </nav>
+</div>
+
+
+
+        <!-- HEADER SMARTPHONE -->
+        <header class="header">
+            <div class="menu-toggle" id="menu-toggle">
+                &#9776; <!-- Icône burger -->
+            </div>
+        </header>
+        
+        <nav class="sidebar" id="sidebar">
+            <div class="close-btn" id="close-btn">&times;</div>
+            <ul>
+                <li><a href="Accueil.html">Accueil</a></li>
+                <li><a href="A-propos-d-Eva.html">À propos d'Eva</a></li>
+                <li class="dropdownsmart">
+                    <div class="soin-arrow"></div>
+                    <a href="Les-Soins.html" class="dropdown-link-smart">
+                        Les Soins </a>
+                        <span class="arrowsmart">&#9662;</span> <!-- Flèche séparée pour le clic -->
+                    </div>
+                                        <ul class="submenusmart">
+                        <li><a href="Soins-Facialistes.html">Soins Facialistes</a></li>
+                        <li><a href="Soins-du-Corps.html">Le Corps</a></li>
+                        <li><a href="Cours-et-Protocoles.html">Cours et Protocoles</a></li>
+                    </ul>
+                </li>
+                          
+                <li><a href="Reservation-choix-du-lieu.html">Réservation</a></li>
+                <li><a href="Foire-aux-questions.html">FAQ</a></li>
+                <li><a href="Contact.html">Contact</a></li>
+                <li><img src="images/logo-soleil.png" alt="Logo décoratif" class="method-logo2"></li>
+            </ul>
+        </nav>
+
+
+
+
+
+
+    
+
+
+        <h2 class="selection" id="selection">Prestation<span class="parenthese">(</span>s<span class="parenthese">)</span> sélectionnée<span class="parenthese">(</span>s<span class="parenthese">)</span></h2>
+        <div id="selection-container">
+            <section class="bloc-soin-selectionne">
+                <div class="soin-details">
+                    <span class="close-btn">&times;</span>
+                    <div class="soin-nom" id="soin-nom"></div>
+                    <div class="details-bas">
+                        <h2 id="soin-duree">Durée du soin</h2>
+                        <h2 id="soin-prix">Prix</h2>
+                    </div>
+                </div>
+            </section>
+        </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+            <div id="soins-selectionnes"></div>
+
+            <button id="ajouter-soin-btn" class="ajouter-soin">Ajouter un soin supplémentaire</button>
+
+            <div id="liste-soins" class="hidden">
+               
+                <!-- FACIALISTE -->
+                <h3 class="titre-soins"><br><span class=tilde2>~</span>  Soins Facialistes  <span class=tilde3>~</span></h3>
+                <div class="bloc-container">
+
+                    <!-- Bloc 1 -->
+                    <div class="bloc soin">
+                        <h1 class="titre-offre">Le Miracle Face</h1>
+                        <h5 class="sous-titre-offre">Certifié Renata França</h5>
+                        <img src="images/soleil-blanc.png" alt="Logo Soleil Blanc" class="logo-soleil-bloc">
+                        <div class="contenu-bloc">
+                            <p class="description-miracle">Le Miracle Face est un soin complet qui sculpte, raffermit et illumine le visage en profondeur. Grâce à des techniques manuelles avancées, ce soin cible les zones spécifiques du visage pour un effet lifting naturel. Il combine drainage lymphatique et stimulation des muscles faciaux, pour offrir une peau plus ferme, un contour du visage redéfini et un éclat immédiat.Effet drainant et nettoyant il détoxifie et purifie, en favorisant l’élimination des toxines pour un teint plus clair et équilibré.</p>
+                
+                            <div class="reservation-btn">
+                                <button class="btn-reserver" 
+                                    data-soin="Le Miracle Face" 
+                                    data-duree="60 min" 
+                                    data-prix="80€">
+                                    RÉSERVER
+                                </button>
+                            </div>
+                            
+                        </div>
+                        <div class="fleche"></div> <!-- Flèche ajoutée -->
+                    </div>
+        
+                    <!-- Bloc 1-2 -->
+                    <div class="bloc soin">
+                        <h1 class="titre-offre">Le Miracle Face - La Cure</h1>
+                        <h5 class="sous-titre-offre">Certifié Renata França</h5>
+                        <img src="images/soleil-blanc.png" alt="Logo Soleil Blanc" class="logo-soleil-bloc">
+                        <div class="contenu-bloc">
+                            <p class="description-miracle2">La cure Miracle Face se compose de <span class=chiffre>5</span> séances, permettant d’intensifier et de prolonger les effets de ce soin sculptant et raffermissant. Au fil des séances, les techniques manuelles avancées travaillent en profondeur pour un effet lifting naturel plus durable, tout en boostant la circulation et la tonicité des muscles faciaux.<br>
+                                <br>
+                                En combinant drainage lymphatique et stimulation musculaire, cette cure affine et redéfinit les contours du visage, tout en purifiant la peau. Séance après séance, le teint devient plus clair, la peau plus ferme et l’éclat encore plus rayonnant.</p>
+                
+                            <div class="reservation-btn">
+                                <button class="btn-reserver" 
+                                    data-soin="Le Miracle Face - La Cure" 
+                                    data-duree="5 séances" 
+                                    data-prix="350€">
+                                    RÉSERVER
+                                </button>
+                            </div>
+                            
+                        </div>
+                        <div class="fleche"></div> <!-- Flèche ajoutée -->
+                    </div>
+        
+        
+                    <!-- Bloc 2 -->
+                    <div class="bloc soin">
+                        <h1 class="titre-offre">Face Lift</h1>
+                        <h5 class="sous-titre-offre">Face-lift Massage Intra-Buccal</h5>
+                        <img src="images/soleil-blanc.png" alt="Logo Soleil Blanc" class="logo-soleil-bloc">
+                        <div class="contenu-bloc">
+                            <p class="description-face">Le soin intra-buccal est une technique de massage innovante qui se pratique directement à l’intérieur de la bouche. Il agit sur les muscles profonds du visage pour offrir un effet liftant immédiat et redonner de la tonicité à l’ovale du visage. Il Offre une alternative naturelle aux injections pour un effet lifting et une peau repulpée.<br>
+                                <br>
+                                Ce soin est la solution idéale pour celles qui recherchent un effet liftant visible, un teint éclatant et un relâchement musculaire, tout en privilégiant une méthode naturelle. Offrez à votre visage une transformation douce et efficace.</p>
+        
+                            <div class="reservation-btn">
+                                <button class="btn-reserver" 
+                                    data-soin="Face Lift" 
+                                    data-duree="30 min" 
+                                    data-prix="90€">
+                                    RÉSERVER
+                                </button>
+                            </div>
+        
+                        </div>
+                        <div class="fleche"></div> <!-- Flèche ajoutée -->
+                    </div>
+        
+                    <!-- Bloc 3 -->
+                    <div class="bloc soin">
+                        <h1 class="titre-offre-better">Le Soin Better Aging</h1>
+                        <img src="images/soleil-blanc.png" alt="Logo Soleil Blanc" class="logo-soleil-bloc">
+                        <div class="contenu-bloc">
+                            <p class="description-better">Le Miracle Face, réputé pour ses effets immédiats, associe drainage lymphatique, modelage sculptant et détente musculaire pour un effet liftant et détoxifiant. Associé au Face Lift Massage intra-buccal, ce soin agit en profondeur en ciblant les muscles et les tissus de l’intérieur. Cette synergie unique lisse les rides, redessine les contours du visage et redonne éclat et fermeté à la peau. Les résultats sont visibles dès la première séance et s’intensifient au fil des applications, offrant un rajeunissement naturel et durable.</p>
+        
+                            <div class="reservation-btn">
+                                <button class="btn-reserver" 
+                                    data-soin="Le Soin Better Aging" 
+                                    data-duree="1 heure" 
+                                    data-prix="120€">
+                                    RÉSERVER
+                                </button>
+                            </div>
+        
+                        </div>
+                        <div class="fleche"></div> <!-- Flèche ajoutée -->
+                    </div>
+        
+                    <!-- Bloc 4 -->
+                    <div class="bloc soin">
+                        <h1 class="titre-offre">Le Soin Better Aging</h1>
+                        <h5 class="sous-titre-offre">Expert</h5>
+                        <img src="images/soleil-blanc.png" alt="Logo Soleil Blanc" class="logo-soleil-bloc">
+                        <div class="contenu-bloc">
+                            <p class="description-better-expert">Un soin facialiste d'excellence</p>
+                            <p class="description">Encore plus complet, le Better Aging Expert associe le pouvoir du Miracle Face (drainage lymphatique, modelage sculptant, détente musculaire) à l’efficacité du Face Lift Massage intra-buccal. Cette version <span class=chiffre>1</span>h<span class=chiffre>30</span> agit en profondeur pour lifter, redessiner et raffermir durablement le visage. Résultats visibles dès la première séance : traits défatigués, rides lissées, peau lumineuse et rebondi.</p>
+                            
+                            <div class="reservation-btn">
+                                <button class="btn-reserver" 
+                                    data-soin="Le Soin Better Aging - Expert" 
+                                    data-duree="1 heure 30 min" 
+                                    data-prix="150€">
+                                    RÉSERVER
+                                </button>
+                            </div>
+                            
+                        </div>
+                        <div class="fleche"></div> <!-- Flèche ajoutée -->
+                    </div>
+                </div>
+
+
+
+
+
+                <!-- LE CORPS -->
+                <h3 class="titre-soins"><br><span class=tilde2>~</span>  Le Corps  <span class=tilde3>~</span></h3>
+                <div class="bloc-container">
+
+                    <!-- Bloc 1 -->
+                    <div class="bloc soin">
+                        <h1 class="titre-offre">DRAINAGE LYMPHATIQUE</h1>
+                        <h5 class="sous-titre-offre">Certifié Renata França</h5>
+                        <img src="images/soleil-blanc.png" alt="Logo Soleil Blanc" class="logo-soleil-bloc">
+                        <div class="contenu-bloc">
+                            <p class="description-drainage">Le drainage lymphatique méthode Renata Franca est une technique de massage manuel  qui vise à stimuler la circulation lymphatique pour éliminer les toxines, réduire la rétention d’eau et affiner la silhouette. Accélération de la récupération musculaire, idéal pour les sportives.Ce soin puissant est idéal pour celles et ceux qui souhaitent un corps plus drainé, sculpté et revitalisé.</p>
+                        
+                            <div class="reservation-btn">
+                                <button class="btn-reserver" 
+                                    data-soin="Drainage Lymphatique" 
+                                    data-duree="60 min" 
+                                    data-prix="150€">
+                                    RÉSERVER
+                                </button>
+                            </div>
+            
+                        </div>
+                        <div class="fleche"></div> <!-- Flèche ajoutée -->
+                    </div>
+            
+                    <!-- Bloc 1-2 -->
+                    <div class="bloc soin">
+                        <h1 class="titre-offre">DRAINAGE LYMPHATIQUE - La Cure</h1>
+                        <h5 class="sous-titre-offre">Certifié Renata França</h5>
+                        <img src="images/soleil-blanc.png" alt="Logo Soleil Blanc" class="logo-soleil-bloc">
+                        <div class="contenu-bloc">
+                            <p class="description">La cure se compose de <span class=chiffre>5</span> séances, permettant de renforcer et de prolonger les bienfaits du drainage lymphatique sur la durée. À chaque séance, la stimulation de la circulation lymphatique devient plus profonde, permettant d'optimiser les bienfaits.<br>
+                                <br>
+                                Idéale pour celles qui recherchent des résultats visibles et durables, ainsi qu'une sensation de légèreté et de vitalité renforcée.</p>
+                        
+                            <div class="reservation-btn">
+                                <button class="btn-reserver" 
+                                    data-soin="Drainage Lymphatique - La Cure" 
+                                    data-duree="5 séances" 
+                                    data-prix="600€">
+                                    RÉSERVER
+                                </button>
+                            </div>
+            
+                        </div>
+                        <div class="fleche"></div> <!-- Flèche ajoutée -->
+                    </div>
+            
+            
+                    <!-- Bloc 2 -->
+                    <div class="bloc soin">
+                        <h1 class="titre-offre">MASSAGE RELAXANT</h1>
+                        <h5 class="sous-titre-offre">Le Lomi Lomi Hawa</h5>
+                        <img src="images/soleil-blanc.png" alt="Logo Soleil Blanc" class="logo-soleil-bloc">
+                        <div class="contenu-bloc">
+                            <p class="description">Le Massage Lomi Lomi Hawaïen est une expérience de relaxation ultime, où des mouvements fluides et harmonieux réalisés avec les avant-bras invitent à une profonde détente. Ce soin libère les tensions, renouvelle l’énergie et offre une sensation de sérénité totale, en rééquilibrant le corps et l’esprit.<br>
+                                <br>
+                                Laissez-vous envelopper par la douceur de ce massage ancestral pour une régénération totale et un bien-être profond.    
+                                </p>
+                            
+                            <div class="reservation-btn">
+                                <button class="btn-reserver" 
+                                    data-soin="Massage Relaxant" 
+                                    data-duree="60 min" 
+                                    data-prix="90€">
+                                    RÉSERVER
+                                </button>
+                            </div>
+            
+                        </div>
+                        <div class="fleche"></div> <!-- Flèche ajoutée -->
+                    </div>
+            
+                    <!-- Bloc 2-2 -->
+                    <div class="bloc soin">
+                        <h1 class="titre-offre">MASSAGE RELAXANT - Complet</h1>
+                        <h5 class="sous-titre-offre">Le Lomi Lomi Hawa</h5>
+                        <img src="images/soleil-blanc.png" alt="Logo Soleil Blanc" class="logo-soleil-bloc">
+                        <div class="contenu-bloc">
+                            <p class="description">Le Massage Lomi Lomi Hawaïen, dans sa version prolongée, est une immersion encore plus profonde dans la relaxation. Grâce à des mouvements amples et fluides réalisés avec les avant-bras, ce soin libère intensément les tensions, revitalise l’énergie et procure une sérénité absolue.<br>
+                                <br>
+                                Profitez d’un lâcher-prise total et d’un rééquilibrage en profondeur du corps et de l’esprit, pour une sensation de bien-être durable et une régénération complète.
+                                </p>
+                            
+                            <div class="reservation-btn">
+                                <button class="btn-reserver" 
+                                    data-soin="Massage Relaxant - Complet" 
+                                    data-duree="90 min" 
+                                    data-prix="130€">
+                                    RÉSERVER
+                                </button>
+                            </div>
+            
+                        </div>
+                        <div class="fleche"></div> <!-- Flèche ajoutée -->
+                    </div>
+                </div>
+
+
+
+                <!-- COURS -->
+
+                <h3 class="titre-soins"><br><span class=tilde2>~</span>  Cours et Protocoles  <span class=tilde3>~</span></h3>
+                <div class="bloc-container">
+                    <!-- Bloc 1 -->
+                    <div class="bloc soin">
+                        <h1 class="titre-offre">Le cours personnalisé</h1>
+                        <h5 class="sous-titre-offre">Yoga Facial</h5>
+                        <img src="images/soleil-blanc.png" alt="Logo Soleil Blanc" class="logo-soleil-bloc">
+                        <div class="contenu-bloc">
+                            <p class="description-yoga">En tant que Facialiste et Instructrice de Yoga Facial, je vous propose une approche personnalisée, basée sur la technique exclusive de Sylvie Lefranc. Après un diagnostic détaillé de votre visage et une écoute attentive de vos attentes, nous mettrons en place des exercices ciblés qui correspondent à la morphologie unique de votre visage.</p>
+            
+                            <div class="reservation-btn">
+                                <button class="btn-reserver" 
+                                    data-soin="Cours Yoga Facial"
+                                    data-duree="1 heure" 
+                                    data-prix="70€">
+                                    RÉSERVER
+                                </button>
+                            </div>
+            
+                        </div>
+                        <div class="fleche"></div> <!-- Flèche ajoutée -->
+                    </div>
+            
+            
+                    <!-- Bloc 2 -->
+                    <div class="bloc soin">
+                        <h1 class="titre-offre">Le cours personnalisé</h1>
+                        <h5 class="sous-titre-offre">Auto Massage</h5>
+                        <img src="images/soleil-blanc.png" alt="Logo Soleil Blanc" class="logo-soleil-bloc">
+                        <div class="contenu-bloc">
+                            <p class="description">Je vous propose un cours d’automassage personnalisé, certifié par Sylvie Lefranc, pour apprendre à masser correctement votre visage et à maîtriser des techniques efficaces pour améliorer l’état de votre peau. Cette pratique régulière aura un impact réel sur la tonicité et l’éclat de votre visage.<br>
+                                <br>
+                                Lors de cette séance, vous découvrirez également l’utilisation d’outils comme le gua sha et le massage intra-buccal, pour des résultats optimisés.</p>
+                        
+                            <div class="reservation-btn">
+                                <button class="btn-reserver" 
+                                    data-soin="Cours d'Auto Massage Visage" 
+                                    data-duree="1 heure" 
+                                    data-prix="70€">
+                                    RÉSERVER
+                                </button>
+                            </div>
+            
+                        </div>
+                        <div class="fleche"></div> <!-- Flèche ajoutée -->
+                    </div>
+            
+                </div>
+
+            </div>
+
+
+            <div class="selection-container">
+            
+                <!-- Bloc Calendrier -->
+                <div id="calendar-container">
+                    <div id="month-controls">
+                        <button id="prev-month"><i class="fa-solid fa-caret-left"></i></button>
+                        <span id="month-name"></span>
+                        <button id="next-month"><i class="fa-solid fa-caret-right"></i></button>
+                    </div>
+                    <div id="calendar"></div>
+                </div>
+            
+                <!-- Bloc Créneaux -->
+                <div id="slots">
+                    <h6 class="titre-creneau">créneaux</h6>
+                    <div class="slot-container">
+                        <button class="slot">9:00</button>
+                        <button class="slot">9:15</button>
+                        <button class="slot">9:30</button>
+                        <button class="slot">9:45</button>
+                        <button class="slot">10:00</button>
+                        <button class="slot">10:15</button>
+                        <button class="slot">10:30</button>
+                        <button class="slot">10:45</button>
+                        <button class="slot">11:00</button>
+                        <button class="slot">11:15</button>
+                        <button class="slot">11:30</button>
+                        <button class="slot">11:45</button>
+                        <button class="slot">12:00</button>
+                        <button class="slot">12:15</button>
+                        <button class="slot">12:30</button>
+                        <button class="slot">12:45</button>
+                        <button class="slot">13:00</button>
+                        <button class="slot">13:15</button>
+                        <button class="slot">13:30</button>
+                        <button class="slot">13:45</button>
+                        <button class="slot">14:00</button>
+                        <button class="slot">14:15</button>
+                        <button class="slot">14:30</button>
+                        <button class="slot">14:45</button>
+                        <button class="slot">15:00</button>
+                        <button class="slot">15:15</button>
+                        <button class="slot">15:30</button>
+                        <button class="slot">15:45</button>
+                        <button class="slot">16:00</button>
+                        <button class="slot">16:15</button>
+                        <button class="slot">16:30</button>
+                        <button class="slot">16:45</button>
+                        <button class="slot">17:00</button>
+                        <button class="slot">17:15</button>
+                        <button class="slot">17:30</button>
+                        <button class="slot">17:45</button>
+                        <button class="slot">18:00</button>
+                        <button class="slot">18:15</button>
+                        <button class="slot">18:30</button>
+                        <button class="slot">18:45</button>
+                        <button class="slot">19:00</button>
+                    </div>
+                </div>
+            
+            </div>
+            
+            <!-- Bouton Réserver centré -->
+            <div class="button-container">
+                <button id="reserve-button">Réserver</button> </div>
+            </div>
+
+            
+
+            
+    
+
+
+
+
+     <!-- Pied de page -->
+     <footer class="footer">
+        <div class="footer-container">
+            <div class="logo-pied">
+                <img src="images/soleil-dore.png" alt="Logo demi soleil doré" class="logodore">
+            </div>
+            <div class="mentions-legales">
+                <a href="Mentions-Legales.html">Mentions légales</a>
+            </div>
+        </div>
+    </footer>
+
+<script src="scriptBandol.js"></script>
+<script src="script-facialiste.js"></script>
+<script src="header.js"></script>
+<script src="header-smartphone.js"></script>
+<script src="https://kit.fontawesome.com/cde74a57e6.js" crossorigin="anonymous"></script>
+
+</body>
+</html>

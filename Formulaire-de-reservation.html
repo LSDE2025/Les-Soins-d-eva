@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulaire de Réservation - Les Soins d’Eva</title>
+    <link rel="stylesheet" href="style.css">
+</head> 
+<body>
+    
+
+
+     <!-- HEADER ORDI -->
+     <div class="top-border"></div> <!-- Bande en haut -->
+     <a href="Accueil.html">
+         <img src="images/entete.png" alt="Entête" class="entete-img">
+     </a>
+     <div class="bottom-border"></div>
+     <nav class="menu-container">
+     <ul class="menu">
+         <li><a href="Accueil.html">Accueil</a></li>
+         <li><a href="A-propos-d-Eva.html">À propos d'Eva</a></li>
+         <li class="dropdown">
+             <a href="Les-Soins.html" class="dropdown-link">Les Soins</a>
+             <span class="arrow" onclick="toggleMenu()">&#9662;</span>
+             <ul class="submenu">
+                 <li><a href="Soins-Facialistes.html">Soins Facialistes</a></li>
+                 <li><a href="Soins-du-Corps.html">Le Corps</a></li>
+                 <li><a href="Cours-et-Protocoles.html">Cours et Protocoles</a></li>
+             </ul>
+         </li>
+         <li><a href="Reservation-choix-du-lieu.html">Réservation</a></li>
+         <li><a href="Foire-aux-questions.html">FAQ</a></li>
+         <li><a href="Contact.html">Contact</a></li>
+     </ul>
+ </nav>
+
+
+
+     <!-- HEADER SMARTPHONE -->
+     <header class="header">
+         <div class="menu-toggle" id="menu-toggle">
+             &#9776; <!-- Icône burger -->
+         </div>
+     </header>
+     
+     <nav class="sidebar" id="sidebar">
+         <div class="close-btn" id="close-btn">&times;</div>
+         <ul>
+             <li><a href="Accueil.html">Accueil</a></li>
+             <li><a href="A-propos-d-Eva.html">À propos d'Eva</a></li>
+             <li class="dropdownsmart">
+                 <div class="soin-arrow"></div>
+                 <a href="Les-Soins.html" class="dropdown-link-smart">
+                     Les Soins </a>
+                     <span class="arrowsmart">&#9662;</span> <!-- Flèche séparée pour le clic -->
+                 </div>
+                                     <ul class="submenusmart">
+                     <li><a href="Soins-Facialistes.html">Soins Facialistes</a></li>
+                     <li><a href="Soins-du-Corps.html">Le Corps</a></li>
+                     <li><a href="Cours-et-Protocoles.html">Cours et Protocoles</a></li>
+                 </ul>
+             </li>
+                       
+             <li><a href="Reservation-choix-du-lieu.html">Réservation</a></li>
+             <li><a href="Foire-aux-questions.html">FAQ</a></li>
+             <li><a href="Contact.html">Contact</a></li>
+             <li><img src="images/logo-soleil.png" alt="Logo décoratif" class="method-logo2"></li>
+         </ul>
+     </nav>
+
+    <div class="form-container">
+
+        <!-- BLOC 1 : Informations du client -->
+        <div class="bloc1">
+            
+            <div class="line-nom" style="display: flex; justify-content: space-between;">
+                <div class="champs-nom" style="flex: 1;">
+                    <label class="name" for="nom">NOM *</label>
+                    <input type="text" id="nom" name="nom" required>
+                </div>
+                <div class="champs-prenom" style="flex: 1;">
+                    <label class="name" for="prenom">Prénom *</label>
+                    <input type="text" id="prenom" name="prenom" required>
+                </div>
+            </div>
+
+            <div class="line-mail" style="display: flex; justify-content: space-between;">
+                <div class="champs-email" style="flex: 1;">
+                    <label class="email" for="email">Adresse mail *</label>
+                    <input type="email-input" id="email" name="email" required>
+                </div>
+                <div class="champs-phone" style="flex: 1;">
+                    <label class="phone" for="phone">Numéro de téléphone *</label>
+                    <input type="tel" id="phone" name="phone" class="phone-number" required>
+                </div>
+            </div>
+        
+            <div class="line-info">
+                <label class="info" for="infoComplementaires">Informations complémentaires</label>
+                <textarea id="infoComplementaires" name="infoComplementaires"></textarea>
+            </div>
+        </div>
+        
+
+        <!-- BLOC 2 : Détail de la réservation -->
+        <div class="bloc2">
+
+            <div class="line">
+                <h6 class="date">Date & Heure</h6>
+                <p id="date-value">Sélectionnez une date</p>
+            </div>
+
+            <hr class="separator">
+
+            <div class="line">
+                <h6 class="lieu">Lieu de l'institut</h6>
+                <p id="location-value">Sélectionnez un lieu</p>
+            </div>
+
+            <hr class="separator">
+
+            <div class="line">
+                <h6 class="soin">Prestation<span class="parenthese">(</span>s<span class="parenthese">)</span></h6>
+                <p id="soin-value">Sélectionnez un soin</p>
+                <div class="bloc-soin-selectionne" id="soins-supp-container" class="hidden">
+                </div>
+            </div>
+
+            <hr class="separator">
+
+            <div class="line">
+                <h6 class="prixdetail">Prix</h6>
+                <p id="prix-detail-value">Prix non disponible</p>
+            </div>
+
+                <div class="bloc-prix-selectionne" id="prix-supp-container" class="hidden">
+                </div>
+                <div class="bloc-prix-total" id="total-prix-container" class="hidden">
+                    <h6 class="prixdetail">Prix Total</h6>
+                    <p id="total-prix-value">--</p>
+                </div>     
+
+            <hr class="separator">
+
+            <div class="line">
+                <div class="text-resa">
+                <p class="engagement">En confirmant votre réservation, vous vous engagez à l'honorer.</p>
+                <p id="paiement">Paiement uniquement par chèque, espèces ou Wero.</p>           
+                </div>
+            </div>
+
+            <div class="line">
+                <button class="btn-confirm" id="confirm-button" disabled>Confirmer</button>
+            </div>
+
+        </div>
+    </div>
+
+
+     <!-- Pied de page -->
+     <footer class="footer">
+        <div class="footer-container">
+            <div class="logo-pied">
+                <img src="images/soleil-dore.png" alt="Logo demi soleil doré" class="logodore">
+            </div>
+            <div class="mentions-legales">
+                <a href="Mentions-Legales.html">Mentions légales</a>
+            </div>
+        </div>
+    </footer>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script src="form.js"></script>
+<script src="header.js"></script>
+<script src="header-smartphone.js"></script>
+
+    
+</body>
+</html>

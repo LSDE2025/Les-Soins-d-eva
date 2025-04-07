@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Réservation (Choix du lieu) - Les Soins d’Eva</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+
+
+
+    
+    <!-- HEADER ORDI -->
+<div class="headerordi">
+    <div class="top-border"></div> <!-- Bande en haut -->
+    <a href="Accueil.html">
+        <img src="images/entete.png" alt="Entête" class="entete-img">
+    </a>
+    <div class="bottom-border"></div>
+    <nav class="menu-container">
+    <ul class="menu">
+        <li><a href="Accueil.html">Accueil</a></li>
+        <li><a href="A-propos-d-Eva.html">À propos d'Eva</a></li>
+        <li class="dropdown">
+            <a href="Les-Soins.html" class="dropdown-link">Les Soins</a>
+            <span class="arrow" onclick="toggleMenu()">&#9662;</span>
+            <ul class="submenu">
+                <li><a href="Soins-Facialistes.html">Soins Facialistes</a></li>
+                <li><a href="Soins-du-Corps.html">Le Corps</a></li>
+                <li><a href="Cours-et-Protocoles.html">Cours et Protocoles</a></li>
+                <li><a href="faq.html">FAQ</a></li>
+            </ul>
+        </li>
+        <li><a href="Reservation-choix-du-lieu.html">Réservation</a></li>
+        <li><a href="Foire-aux-questions.html">FAQ</a></li>
+        <li><a href="Contact.html">Contact</a></li>
+    </ul>
+    </nav>
+</div>
+
+
+
+        <!-- HEADER SMARTPHONE -->
+        <header class="header">
+            <div class="menu-toggle" id="menu-toggle">
+                &#9776; <!-- Icône burger -->
+            </div>
+        </header>
+        
+        <nav class="sidebar" id="sidebar">
+            <div class="close-btn" id="close-btn">&times;</div>
+            <ul>
+                <li><a href="Accueil.html">Accueil</a></li>
+                <li><a href="A-propos-d-Eva.html">À propos d'Eva</a></li>
+                <li class="dropdownsmart">
+                    <div class="soin-arrow"></div>
+                    <a href="Les-Soins.html" class="dropdown-link-smart">
+                        Les Soins </a>
+                        <span class="arrowsmart">&#9662;</span> <!-- Flèche séparée pour le clic -->
+                    </div>
+                                        <ul class="submenusmart">
+                        <li><a href="Soins-Facialistes.html">Soins Facialistes</a></li>
+                        <li><a href="Soins-du-Corps.html">Le Corps</a></li>
+                        <li><a href="Cours-et-Protocoles.html">Cours et Protocoles</a></li>
+                    </ul>
+                </li>
+                          
+                <li><a href="Reservation-choix-du-lieu.html">Réservation</a></li>
+                <li><a href="Foire-aux-questions.html">FAQ</a></li>
+                <li><a href="Contact.html">Contact</a></li>
+                <li><img src="images/logo-soleil.png" alt="Logo décoratif" class="method-logo2"></li>
+            </ul>
+        </nav>
+
+
+            <div class="selection-container">
+    
+                <!-- Bloc Lieu -->
+                <div id="location-container">
+                    <img src="images/soleil-marron-droite.png" alt="Soleil Marron Droite" class="soleil-marron-resa">
+                    <img src="images/soleil-dore-gauche.png" alt="Soleil Doré Gauche" class="soleil-dore-resa">
+
+                    
+                   <h6>Choisissez votre institut</h6>
+                    <br><br><br>
+                    <div class="location-options">
+                        <a href="Reservation-Paris.html">
+                            <button id="location-btn-Paris" class="location-btn-Paris">Paris</button>
+                        </a>
+                        
+                        <a href="Reservation-Bandol.html">
+                            <button id="location-btn-Bandol" class="location-btn-Bandol">Bandol</button>
+                        </a>
+
+                        <a href="javascript:void(0);" id="cadeaux-link">
+                            <button id="cadeaux-btn" class="cadeaux-btn">Carte Cadeau</button>
+                        </a>
+                        
+                        <!-- Le Popup Modale -->
+                        <div id="cadeaux-popup" class="popup-overlay">
+                            
+                            <div class="popup-content">
+                                <img src="images/soleil-dore-gauche.png" alt="Soleil Doré Droite" class="soleil-marron-pop">
+                                <img src="images/soleil-marron-droite.png" alt="Soleil Marron Gauche" class="soleil-dore-pop">
+    
+                                <h2>Carte Cadeau</h2>
+
+                                <img src="images/bon-cadeau.png" alt="Modèle de bon cadeau" class="bon-cadeau">
+
+                                <p> Tous les soins sont disponibles en carte cadeau !<br>
+                                    Pour en faire la demande, contactez-nous par email ou par téléphone, la carte cadeau<span class="asterix">*</span> vous sera adressée.
+                                    <br><br>
+                                    <span class='demat'><em>* en version dématérialisée</em></span>
+                                </p>
+                                <button id="close-popup-btn">Fermer</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
+
+
+
+
+     <!-- Pied de page -->
+     <footer class="footer">
+        <div class="footer-container">
+            <div class="logo-pied">
+                <img src="images/soleil-dore.png" alt="Logo demi soleil doré" class="logodore">
+            </div>
+            <div class="mentions-legales">
+                <a href="Mentions-Legales.html">Mentions légales</a>
+            </div>
+        </div>
+    </footer>
+
+<script src="header.js"></script>
+<script src="popup.js"></script>
+<script src="header-smartphone.js"></script>
+<script src="https://kit.fontawesome.com/cde74a57e6.js" crossorigin="anonymous"></script>
+
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Réservation validée ! - Les Soins d’Eva</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+   
+     
+    <style>
+        .headerordi {
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background-color: rgb(106, 83, 78); 
+        }
+    
+        .entete-img, .menu a {
+        transition: height 0.5s ease-in-out, width 0.5s ease-in-out, font-size 0.5s ease-in-out;
+        }
+
+        .scrolling-down .entete-img, 
+        .scrolling-down, 
+        .scrolling-down .menu a {
+        transition-duration: 0.8s;
+        }
+    </style>
+
+
+
+
+
+
+    
+    <!-- HEADER ORDI -->
+<div class="headerordi">
+    <div class="top-border"></div> <!-- Bande en haut -->
+    <a href="Accueil.html">
+        <img src="images/entete.png" alt="Entête" class="entete-img">
+    </a>
+    <div class="bottom-border"></div>
+    <nav class="menu-container">
+    <ul class="menu">
+        <li><a href="Accueil.html">Accueil</a></li>
+        <li><a href="A-propos-d-Eva.html">À propos d'Eva</a></li>
+        <li class="dropdown">
+            <a href="Les-Soins.html" class="dropdown-link">Les Soins</a>
+            <span class="arrow" onclick="toggleMenu()">&#9662;</span>
+            <ul class="submenu">
+                <li><a href="Soins-Facialistes.html">Soins Facialistes</a></li>
+                <li><a href="Soins-du-Corps.html">Le Corps</a></li>
+                <li><a href="Cours-et-Protocoles.html">Cours et Protocoles</a></li>
+            </ul>
+        </li>
+        <li><a href="Reservation-choix-du-lieu.html">Réservation</a></li>
+        <li><a href="Foire-aux-questions.html">FAQ</a></li>
+        <li><a href="Contact.html">Contact</a></li>
+    </ul>
+    </nav>
+</div>
+
+
+
+     <!-- HEADER SMARTPHONE -->
+     <header class="header">
+         <div class="menu-toggle" id="menu-toggle">
+             &#9776; <!-- Icône burger -->
+         </div>
+     </header>
+     
+     <nav class="sidebar" id="sidebar">
+         <div class="close-btn" id="close-btn">&times;</div>
+         <ul>
+             <li><a href="Accueil.html">Accueil</a></li>
+             <li><a href="A-propos-d-Eva.html">À propos d'Eva</a></li>
+             <li class="dropdownsmart">
+                 <div class="soin-arrow"></div>
+                 <a href="Les-Soins.html" class="dropdown-link-smart">
+                     Les Soins </a>
+                     <span class="arrowsmart">&#9662;</span> <!-- Flèche séparée pour le clic -->
+                 </div>
+                                     <ul class="submenusmart">
+                     <li><a href="Soins-Facialistes.html">Soins Facialistes</a></li>
+                     <li><a href="Soins-du-Corps.html">Le Corps</a></li>
+                     <li><a href="Cours-et-Protocoles.html">Cours et Protocoles</a></li>
+                 </ul>
+             </li>
+                       
+             <li><a href="Reservation-choix-du-lieu.html">Réservation</a></li>
+             <li><a href="Foire-aux-questions.html">FAQ</a></li>
+             <li><a href="Contact.html">Contact</a></li>
+             <li><img src="images/logo-soleil.png" alt="Logo décoratif" class="method-logo2"></li>
+         </ul>
+     </nav>
+
+
+
+<!-- Texte validation -->
+<div class="confirmation-container">
+    <h6 class="confirmation-title">Rendez-vous confirmé !</h6>
+    <p class="confiance-text">Merci pour votre confiance</p>
+    <p class="mail-text">Un mail de confirmation vous a été envoyé.</p>
+    <p class="empechement-text"><em>En cas d'empêchement, merci de nous prévenir au maximum 48h avant, par mail ou téléphone.</em></p>
+    <div class="logo-soleil-validation">
+        <img src="images/logo-soleil.png" alt="Logo Soleil">
+    </div>
+    <div class="button-index-container"> 
+        <a href="Accueil.html" id="backToHomeButton" class="back-button">Accueil</a>
+    </div>
+</div>
+
+
+
+
+
+
+    <!-- Pied de page -->
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="logo-pied">
+                <img src="images/soleil-dore.png" alt="Logo demi soleil doré" class="logodore">
+            </div>
+            <div class="mentions-legales">
+                <a href="Mentions-Legales.html">Mentions légales</a>
+            </div>
+        </div>
+    </footer>
+    
+
+    <script src="header.js"></script>
+    <script src="header-smartphone.js"></script>
+
+</body>
+</html>
