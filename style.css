@@ -4720,6 +4720,104 @@ body {
     cursor: pointer;
 }
 
+@media (max-width: 780px) {
+    .soleil-marron-resa,
+    .soleil-dore-resa {
+        width: 140px;
+    }
+}
+
+@media (max-width: 660px) {
+    .location-btn-Paris,
+    .location-btn-Bandol,
+    #location-btn-Paris,
+    #location-btn-Bandol,
+    .cadeaux-btn {
+        width: 300px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 580px) {
+    .soleil-marron-resa,
+    .soleil-dore-resa {
+        width: 100px;
+    }
+}
+
+@media (max-width: 500px) {
+    .location-btn-Paris,
+    .location-btn-Bandol,
+    #location-btn-Paris,
+    #location-btn-Bandol,
+    .cadeaux-btn {
+        width: 230px;
+        font-size: 12px;
+    }
+
+    #location-container h6 {
+        font-size: 22px;
+        margin-bottom: 0px;
+    }
+}
+
+@media (max-width: 420px) {
+    .soleil-marron-resa,
+    .soleil-dore-resa {
+        width: 80px;
+    }
+}
+
+@media (max-width: 385px) {
+    .soleil-marron-resa,
+    .soleil-dore-resa {
+        width: 50px;
+    }
+
+    #location-container h6 {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 335px) {
+    .location-btn-Paris,
+    .location-btn-Bandol,
+    #location-btn-Paris,
+    #location-btn-Bandol,
+    .cadeaux-btn {
+        width: 180px;
+        font-size: 11px;
+    }
+
+    #location-container h6 {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 295px) {
+    #location-container h6 {
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 275px) {
+    .soleil-marron-resa,
+    .soleil-dore-resa {
+        visibility: hidden;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
 /* POPUP CARTE CADEAU */
 .popup-overlay {
     display: none;
