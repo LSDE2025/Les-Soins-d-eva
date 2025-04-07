@@ -254,6 +254,27 @@ document.addEventListener("DOMContentLoaded", function () {
         var [day, month, year] = dateString.split("-");
         return `${parseInt(day)} ${monthNames[parseInt(month) - 1]} ${year}`;
     }
+
+            var emailData = {
+        ...reservationData,
+        date: formatDateForEmail(reservationData.date),
+        soinsSupplementaires: soinsSupplementaires.map(soin => ({
+            soinNom: soin.soinNom,
+            soinPrix: soin.soinPrix
+        })),
+        afficherTotal: multiplePrix
+    };
+
+    // Envoi via EmailJS
+    emailjs.send("service_l5rfo3n", "template_c4rx4as", emailData)
+        .then(function(response) {
+            console.log("Succès de l'envoi EmailJS", response);
+            window.location.href = "validation.html";
+        })
+        .catch(function(error) {
+            console.error("Erreur d'envoi EmailJS", error);
+        });
+    
     
     
 
