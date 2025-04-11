@@ -4,8 +4,6 @@ document.addEventListener("DOMContentLoaded", function () {
         window.history.replaceState(null, "", window.location.pathname);
     }, 100);
 
-    disableReservedSlots();
-
     // Définition des prix des soins
     var prixSoin = {
         "Le Miracle Face": 90,
@@ -163,6 +161,8 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     });
+
+       disableReservedSlots();
 
     function showSlots() {
         var slots = document.getElementById("slots");
