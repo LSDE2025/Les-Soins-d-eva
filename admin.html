@@ -9,13 +9,97 @@
 </head>
 <body>
 
-
     <header class="admin-header">
         <h1>Les Soins d'Eva - Administrateur</h1>
-        <button class="logout-button">Déconnexion</button>
+        <div class="admin-buttons">
+            <button id="clear-data-btn" class="clear-data-button">Clear Datas (Mois dernier)</button>
+            <button id="clear-all-data-btn" class="clear-all-data-button">Clear All Datas</button>
+            <button class="logout-button">Déconnexion</button>
+        </div>
     </header>
+
+    <div class="notice">
+        <a href="#" id="notice-link" class="notice-link">Notice d'utilisation</a>
+    </div>
     
+    <!-- Pop-up pour la notice -->
+    <div id="notice-popup" class="popup-overlay">
+        <div class="popup-content">
+            <h2>Notice d'utilisation - Page Admin</h2>
+            <p>
+                Sur cette page, vous pouvez consulter les réservations, annuler des réservations existantes, bloquer des créneaux, et plus encore.
+            </p>
+            <h3>POUR VOIR LES DONNÉES :</h3>
+            <p>1. Sélectionner un lieu (Paris ou Bandol).</p>
+            <p>2. Sélectionner une date.</p>
+            <p>Une fois la date sélectionnée, un tableau apparaîtra avec tous les créneaux.</p>
+            
+            <h3>LE TABLEAU :</h3>
+            <ul>
+                <li><strong>1ère colonne :</strong> Horaire (affichage des horaires existants en base).</li>
+                <li><strong>2ème colonne :</strong> État (coche pour savoir si le créneau est réservé, bloqué ou non-réservable).</li>
+                <li><strong>3ème colonne :</strong> Client / Prestations (informations détaillées sur la réservation).</li>
+            </ul>
+    
+            <h3>SUPPRIMER UNE RÉSERVATION :</h3>
+            <ol>
+                <li>Sélectionner un lieu et une date.</li>
+                <li>Cliquer sur "Modifier" sur la ligne du créneau réservé.</li>
+                <li>Décocher la coche de la 2ème colonne.</li>
+                <li>Cliquez sur "Valider" et confirmer.</li>
+            </ol>
+            <p>Conclusion : La réservation est supprimée, et le créneau est de nouveau en état "Libre".</p>
+            <p><span class="attention-text">ATTENTION :</span> Cette action est irréversible, les données seront définitivement supprimées.</p>
+    
+            <h3>BLOQUER UN CRÉNEAU :</h3>
+            <ol>
+                <li>Sélectionner un lieu et une date.</li>
+                <li>Cliquer sur "Modifier" sur la ligne du créneau libre.</li>
+                <li>Cochez la coche de la 2ème colonne.</li>
+                <li>Cliquez sur "Valider" et confirmer.</li>
+            </ol>
+            <p>Conclusion : Le créneau sera en état "Bloqué".</p>
+    
+            <h3>BLOQUER PLUSIEURS CRÉNEAUX :</h3>
+            <ol>
+                <li>Sélectionner un lieu et une date.</li>
+                <li>Cliquer sur "Modifier tous les créneaux" en haut du tableau.</li>
+                <li>Cliquer sur "Sélectionner tout" ou sélectionner les créneaux à bloquer.</li>
+                <li>Cliquer sur "Valider tous" et confirmer.</li>
+            </ol>
+            <p>Conclusion : Les créneaux sélectionnés seront en état "Bloqué".</p>
+    
+            <h3>NETTOYER LES DONNÉES :</h3>
+            <ol>
+                <li>Cliquer sur le bouton "Clear Datas" en haut de la page.</li>
+                <li>Confirmer l'action.</li>
+            </ol>
+            <p>Conclusion : Les données du mois précédent seront supprimées de la base de données.</p>
+            <p>Veillez à vérifier que les données du mois dernier n'apparaissent plus après cette opération.</p>
+            <p><span class="attention-text">ATTENTION : NE JAMAIS CLIQUER SUR "CLEAR ALL DATAS", CELA SUPPRIME TOUTES LES DONNÉES DE LA BASE DE DONNÉES !             Une double confirmation est mise en place pour protéger et empêcher une erreur de clique.
+            </span></p>
+    
+            <button id="close-notice" class="close-notice-btn">Fermer</button>
+        </div>
+    </div>
+
     <main>
+
+        <!-- Modal (popup) -->
+        <div id="popupModal" class="modal">
+            <div class="modal-content">
+                <span id="closeModal" class="close">&times;</span>
+                <h2>Rappel Mensuel : Nettoyage des Données</h2>
+                <p>
+                    N’oubliez pas de nettoyer les données une fois par mois, idéalement au début de chaque mois, pour garder votre système à jour et optimiser son fonctionnement.
+                    <br><br>
+                    Comment faire : consulter la notice !
+                    <br><br>
+                    Si le nettoyage a déjà été fait ce mois-ci, ne pas tenir compte de ce message.
+                </p>
+            </div>
+        </div>
+
 
         <div id="location-buttons">
             <button id="btn-paris">Paris</button>
@@ -52,7 +136,30 @@
 
     </main>
 
-    <script src="admin.js"></script>
-    <script src="https://kit.fontawesome.com/cde74a57e6.js" crossorigin="anonymous"></script>
+<script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-firestore.js"></script>
+
+<script>
+    // Configuration de Firebase
+    const firebaseConfig = {
+        apiKey: "AIzaSyABvXLj8JxDaifZc0RpFXYwiNNXIX-3VoA",
+        authDomain: "les-soins-d-eva-79df4.firebaseapp.com",
+        projectId: "les-soins-d-eva-79df4",
+        storageBucket: "les-soins-d-eva-79df4.firebasestorage.app",
+        messagingSenderId: "521561130003",
+        appId: "1:521561130003:web:f0750acc66f7aecd73ebe6"
+    };
+
+    // Initialisation de Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // Rendre db accessible globalement
+    window.db = db;
+</script>
+
+
+<script src="admin.js"></script>
+<script src="https://kit.fontawesome.com/cde74a57e6.js" crossorigin="anonymous"></script>
 </body>
 </html>
