@@ -1,6 +1,7 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
     var reservationDetails = JSON.parse(localStorage.getItem("reservationDetails"));
-    emailjs.init("oznZ1x3Y4vlQI0ASz"); 
+    
+    // Utiliser reservationDetails comme auparavant    emailjs.init("oznZ1x3Y4vlQI0ASz"); 
 
     setTimeout(function () {
         window.history.replaceState(null, "", window.location.pathname);
@@ -125,7 +126,7 @@ document.addEventListener("DOMContentLoaded", function () {
         email.addEventListener("input", checkFormCompletion);
         phone.addEventListener("input", checkFormCompletion);
 
-        confirmButton.addEventListener("click", function () {
+        confirmButton.addEventListener("click", async function () {
         var soinsSupplementaires = JSON.parse(localStorage.getItem("soinsSupplementaires")) || [];
 
     // Récupération des données du formulaire
@@ -141,17 +142,23 @@ document.addEventListener("DOMContentLoaded", function () {
         date: reservationDetails.date,
         creneau: reservationDetails.creneau,
         infoComplementaires: document.getElementById("infoComplementaires").value,
-        soinsSupplementaires: soinsSupplementaires // Déjà stocké sous le bon format
+        soinsSupplementaires: soinsSupplementaires 
     };
 
-    function sauvegarderReservationDansLocalStorage(reservationData) {
-        let reservations = JSON.parse(localStorage.getItem("reservations")) || [];
+    async function sauvegarderReservationDansFirestore(reservationData) {
+        try {
+            // Référence à la collection "reservationDetails"
+            const reservationsRef = firebase.firestore().collection("reservationDetails");
+            
+            // Ajouter la réservation à la collection Firestore
+            await reservationsRef.add(reservationData);
     
-        reservations.push(reservationData);
-    
-        localStorage.setItem("reservations", JSON.stringify(reservations));
+            console.log("Réservation sauvegardée dans Firestore.");
+        } catch (error) {
+            console.error("Erreur lors de la sauvegarde de la réservation dans Firestore :", error);
+        }
     }
-
+    
     function getSoinDuration(soin) {
         var durations = {
             "Le Miracle Face": 60,
@@ -169,8 +176,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return durations[soin] || 0;
     }
     
-    function blockNonReservableSlots(soin, selectedTime, date) {
-
+    async function blockNonReservableSlots(soin, selectedTime, date) {
         var allTimeSlots = [
             "9:00", "9:15", "9:30", "9:45",
             "10:00", "10:15", "10:30", "10:45",
@@ -201,25 +207,31 @@ document.addEventListener("DOMContentLoaded", function () {
         // Récupère les créneaux à bloquer
         var slotsToBlock = allTimeSlots.slice(startIndex + 1, startIndex + slotsToAdd + 1);
     
-        // Récupère les créneaux non réservables depuis le localStorage
-        let nonReservable = JSON.parse(localStorage.getItem("non-reservable")) || [];
+        // Prépare les données pour Firestore
+        const location = document.getElementById("location-value").textContent;
+        const nonReservableRef = firebase.firestore().collection("non-reservable");
     
-        // Ajoute les créneaux à bloquer dans le tableau des créneaux non réservables
-        slotsToBlock.forEach(time => {
-            var entry = {
+        // Ajoute les créneaux à bloquer dans Firestore
+        for (const time of slotsToBlock) {
+            const entry = {
                 date: date,
-                location: document.getElementById("location-value").textContent, 
+                location: location,
                 time: time,
                 text: "créneau non réservable"
             };
-            nonReservable.push(entry);
-        });
     
-        // Sauvegarde les créneaux non réservables dans le localStorage
-        localStorage.setItem("non-reservable", JSON.stringify(nonReservable));
-    }    
-
-    sauvegarderReservationDansLocalStorage(reservationData);
+            // Ajout de chaque créneau dans Firestore
+            try {
+                await nonReservableRef.add(entry);
+            } catch (error) {
+                console.error("Erreur lors de l'ajout du créneau non réservable dans Firestore :", error);
+            }
+        }
+    
+        console.log("Créneaux non réservables ajoutés avec succès dans Firestore.");
+    }
+    
+    sauvegarderReservationDansFirestore(reservationData);
 
    // Remplacer soin et prix par le premier soinSupp si soin principal est vide
     if (!reservationData.soin && soinsSupplementaires.length > 0) {
@@ -255,7 +267,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return `${parseInt(day)} ${monthNames[parseInt(month) - 1]} ${year}`;
     }
 
-            var emailData = {
+    var emailData = {
         ...reservationData,
         date: formatDateForEmail(reservationData.date),
         soinsSupplementaires: soinsSupplementaires.map(soin => ({
@@ -274,10 +286,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .catch(function(error) {
             console.error("Erreur d'envoi EmailJS", error);
         });
-    
-    
-    
-
+   
         });
     }
 });
