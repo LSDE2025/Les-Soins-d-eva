@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
         window.history.replaceState(null, "", window.location.pathname);
     }, 100);
 
-
+    disableReservedSlots();
 
     // Définition des prix des soins
     var prixSoin = {
@@ -181,6 +181,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function disableReservedSlots(selectedDate) {
         const selectedLocation = localStorage.getItem("location") || "4, bd Victor Hugo 83150 Bandol";
+
+        if (typeof window.db !== 'undefined') {
+          console.log('db est défini');
+        } else {
+          console.log('db n\'est pas défini');
+        }
     
         // Références aux collections Firestore
         const reservationsRef = db.collection("reservationDetails");
