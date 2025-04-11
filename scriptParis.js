@@ -183,76 +183,75 @@ document.addEventListener("DOMContentLoaded", function () {
     }    
 
     function disableReservedSlots(selectedDate) {
-        // Récupère toutes les réservations et les créneaux bloqués dans le localStorage
-        let reservations = JSON.parse(localStorage.getItem('reservations')) || [];
-        let blockedSlots = JSON.parse(localStorage.getItem('blockedSlots')) || []; 
-        let nonReservableSlots = JSON.parse(localStorage.getItem('non-reservable')) || [];
+        const selectedLocation = localStorage.getItem("location") || "30, rue de Trévise 75009 Paris";
     
-        // Filtrer les réservations qui correspondent à la date et au lieu sélectionnés
-        var reservedSlots = reservations
-            .filter(reservation => reservation.date === selectedDate) 
-            .filter(reservation => reservation.location === "30, rue de Trévise 75009 Paris")
-            .map(reservation => reservation.creneau); 
+        // Références aux collections Firestore
+        const reservationsRef = db.collection("reservationDetails");
+        const blockedSlotsRef = db.collection("blockedSlots");
+        const nonReservableRef = db.collection("non-reservable");
     
-        // Filtrer les créneaux bloqués pour le lieu et la date
-        var blockedSlotsForDateAndLocation = blockedSlots
-            .filter(slot => slot.location === "30, rue de Trévise 75009 Paris" && slot.date === selectedDate)
-            .map(slot => slot.creneau);
-
-        // Filtrer les créneaux non-réservables
-        var nonReservableForDateAndLocation = nonReservableSlots
-        .filter(slot => slot.location === "30, rue de Trévise 75009 Paris" && slot.date === selectedDate)
-        .map(slot => slot.time);
+        Promise.all([
+            reservationsRef
+                .where("date", "==", selectedDate)
+                .where("location", "==", selectedLocation)
+                .get(),
+            blockedSlotsRef
+                .where("date", "==", selectedDate)
+                .where("location", "==", selectedLocation)
+                .get(),
+            nonReservableRef
+                .where("date", "==", selectedDate)
+                .where("location", "==", selectedLocation)
+                .get()
+        ])
+        .then(([reservationsSnapshot, blockedSlotsSnapshot, nonReservableSnapshot]) => {
+            const reservedSlots = reservationsSnapshot.docs.map(doc => doc.data().creneau);
+            const blockedSlots = blockedSlotsSnapshot.docs.map(doc => doc.data().creneau);
+            const nonReservableSlots = nonReservableSnapshot.docs.map(doc => doc.data().time);
     
-        // Désactive les créneaux réservés et masque les créneaux bloqués pour ce jour et lieu
-        document.querySelectorAll(".slot").forEach(slot => {
-            var slotTime = slot.textContent.trim();
+            const allSlotsForSelectedDate = document.querySelectorAll(".slot");
     
-            var isBlocked = blockedSlotsForDateAndLocation.includes(slotTime);
-            var isReserved = reservedSlots.includes(slotTime);
-            var isNonReservable = nonReservableForDateAndLocation.includes(slotTime);
+            allSlotsForSelectedDate.forEach(slot => {
+                const slotTime = slot.textContent.trim();
+                const isBlocked = blockedSlots.includes(slotTime);
+                const isReserved = reservedSlots.includes(slotTime);
+                const isNonReservable = nonReservableSlots.includes(slotTime);
     
-            if (isBlocked) {
-                // Si bloqué, priorité absolue : on cache le créneau
-                slot.classList.add("blocked");
-                slot.classList.remove("reserved"); // On enlève la classe reserved au cas où
-                slot.hidden = true;
-                slot.disabled = true;
-            } else if (isReserved || isNonReservable) {
-                // Si réservé ou non-réservable (et pas bloqué), on désactive
-                slot.classList.add("reserved");
-                slot.classList.remove("blocked"); // On enlève la classe blocked au cas où
-                slot.disabled = true;
-                slot.hidden = false;
-            } else {
-                // Sinon, le créneau est libre
-                slot.classList.remove("reserved", "blocked"); 
-                slot.disabled = false; 
-                slot.hidden = false;
+                if (isBlocked) {
+                    slot.classList.add("blocked");
+                    slot.classList.remove("reserved");
+                    slot.hidden = true;
+                    slot.disabled = true;
+                } else if (isReserved || isNonReservable) {
+                    slot.classList.add("reserved");
+                    slot.classList.remove("blocked");
+                    slot.disabled = true;
+                    slot.hidden = false;
+                } else {
+                    slot.classList.remove("reserved", "blocked");
+                    slot.disabled = false;
+                    slot.hidden = false;
+                }
+            });
+    
+            // Vérifier si tous les créneaux sont bloqués/réservés/non-réservables
+            const allSlotsAreBlocked = Array.from(allSlotsForSelectedDate).every(slot => {
+                const slotTime = slot.textContent.trim();
+                return reservedSlots.includes(slotTime) ||
+                       blockedSlots.includes(slotTime) ||
+                       nonReservableSlots.includes(slotTime);
+            });
+    
+            // Désactiver le bouton du jour si tous les créneaux sont bloqués
+            const dayButton = document.querySelector(`.day-button[data-date="${selectedDate}"]`);
+            if (dayButton) {
+                dayButton.disabled = allSlotsAreBlocked;
             }
+        })
+        .catch(error => {
+            console.error("Erreur lors de la récupération des créneaux :", error);
         });
-        
-            // Vérifier si tous les créneaux sont bloqués pour cette date
-            var allSlotsForSelectedDate = document.querySelectorAll(".slot"); 
-    
-             // Si tous les créneaux sont bloqués ou réservés
-            var allSlotsAreBlocked = Array.from(allSlotsForSelectedDate).every(slot => {
-            var slotTime = slot.textContent.trim(); 
-            return  reservedSlots.includes(slotTime) || 
-                    blockedSlotsForDateAndLocation.includes(slotTime) || 
-                    nonReservableForDateAndLocation.includes(slotTime);
-        });
-            
-            // Désactiver le bouton "Day-button" du jour concerné si tous les créneaux sont bloqués
-            var dayButton = document.querySelector(`.day-button[data-date="${selectedDate}"]`);
-            
-            if (allSlotsAreBlocked && dayButton) {
-                dayButton.disabled = true;
-            } else if (dayButton) {
-                dayButton.disabled = false;
-            }
-        }
-    
+    }    
     
 
     // Masquer les créneaux au chargement
