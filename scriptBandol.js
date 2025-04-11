@@ -162,8 +162,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-       disableReservedSlots();
-
     function showSlots() {
         var slots = document.getElementById("slots");
     
