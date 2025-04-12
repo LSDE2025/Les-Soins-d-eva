@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Définition des prix des soins
     var prixSoin = {
-        "Le Miracle Face": 90,
+        "Le Miracle Face": 80,
         "Le Miracle Face - La Cure": 350,
         "Face Lift": 90,
         "Le Soin Better Aging": 120,
