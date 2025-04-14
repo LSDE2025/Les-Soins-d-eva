@@ -9,6 +9,43 @@
 </head>
 <body>
 
+    <!-- Section de Connexion -->
+    <div id="login-section">
+        <h2>Connexion Admin</h2>
+        <form id="login-form">
+            <label for="username">Nom d'utilisateur :</label>
+            <input type="username" id="username" name="username" required>
+
+            <label for="password">Mot de passe :</label>
+            <input type="password" id="password" name="password" required>
+
+            <button type="submit">Se connecter</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById("login-form").addEventListener("submit", function(e) {
+            e.preventDefault();
+    
+            // Récupérer les valeurs des champs
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+    
+            // Simuler la vérification du fichier JSON ou des données statiques
+            if (username === "admin@lessoinsdeva.com" && password === "LesSoinsEva@ADMIN2025") {
+                // Connexion réussie, masquer la section de connexion et afficher le contenu de l'admin
+                document.getElementById("login-section").style.display = "none";
+                document.getElementById("admin-content").style.display = "block";
+            } else {
+                alert("Nom d'utilisateur ou mot de passe incorrect");
+            }
+        });
+    </script>
+
+    <div id="admin-content" style="display:none;">
+
+
+
     <header class="admin-header">
         <h1>Les Soins d'Eva - Administrateur</h1>
         <div class="admin-buttons">
@@ -44,37 +81,71 @@
             <h3>SUPPRIMER UNE RÉSERVATION :</h3>
             <ol>
                 <li>Sélectionner un lieu et une date.</li>
-                <li>Cliquer sur "Modifier" sur la ligne du créneau réservé.</li>
+                <li>Cliquer sur  <strong>"Modifier"</strong> sur la ligne du créneau réservé.</li>
                 <li>Décocher la coche de la 2ème colonne.</li>
-                <li>Cliquez sur "Valider" et confirmer.</li>
+                <li>Cliquez sur  <strong>"Valider"</strong> et confirmer.</li>
             </ol>
-            <p>Conclusion : La réservation est supprimée, et le créneau est de nouveau en état "Libre".</p>
-            <p><span class="attention-text">ATTENTION :</span> Cette action est irréversible, les données seront définitivement supprimées.</p>
+            <p><strong>Conclusion :</strong> La réservation est supprimée, et le créneau est de nouveau en état <i>"Libre"</i>.</p>
+            <p><span class="attention-text">ATTENTION : Cette action est irréversible, les données seront définitivement supprimées.</span></p>
     
             <h3>BLOQUER UN CRÉNEAU :</h3>
             <ol>
                 <li>Sélectionner un lieu et une date.</li>
-                <li>Cliquer sur "Modifier" sur la ligne du créneau libre.</li>
+                <li>Cliquer sur <strong>"Modifier"</strong> sur la ligne du créneau libre.</li>
                 <li>Cochez la coche de la 2ème colonne.</li>
-                <li>Cliquez sur "Valider" et confirmer.</li>
+                <li>Cliquez sur <strong>"Valider"</strong> et confirmer.</li>
             </ol>
-            <p>Conclusion : Le créneau sera en état "Bloqué".</p>
+            <p><strong>Conclusion :</strong> Le créneau sera en état <i>"Bloqué"</i>.</p>
     
             <h3>BLOQUER PLUSIEURS CRÉNEAUX :</h3>
             <ol>
                 <li>Sélectionner un lieu et une date.</li>
-                <li>Cliquer sur "Modifier tous les créneaux" en haut du tableau.</li>
-                <li>Cliquer sur "Sélectionner tout" ou sélectionner les créneaux à bloquer.</li>
-                <li>Cliquer sur "Valider tous" et confirmer.</li>
+                <li>Cliquer sur <strong>"Modifier tous les créneaux"</strong> en haut du tableau.</li>
+                <li>Cliquer sur <strong>"Sélectionner tout"</strong> ou sélectionner les créneaux à bloquer.</li>
+                <li>Cliquer sur <strong>"Valider tous"</strong> et confirmer.</li>
             </ol>
-            <p>Conclusion : Les créneaux sélectionnés seront en état "Bloqué".</p>
+            <p><strong>Conclusion :</strong> Les créneaux sélectionnés seront en état <i>"Bloqué"</i>.</p>
+
+            <h3>DÉBLOQUER UN OU DES CRÉNEAUX :</h3>
+            <ol>
+                <li>Sélectionner un lieu et une date.</li>
+                <li>Cliquer sur <strong>"Modifier tous les créneaux"</strong> en haut du tableau, ou sur <strong>"Modifier"</strong> sur la ligne concerné si il faut en libérer un seul.</li>
+                <li>Décochez la coche de la 2ème colonne du ou des créneaux bloqués concernés.</li>
+                <li>Cliquer sur <strong>"Valider tous"</strong> ou <strong>"Valider"</strong> suivant la situation, et confirmer.</li>
+            </ol>
+            <p><strong>Conclusion :</strong> Les créneaux anciennement en état <i>"Bloqué"</i> sont maintenant en état <i>"Libre"</i>.</p>
+
+
+            <h3>BLOQUER UN JOUR COMPLET :</h3>
+            <ol> 
+                <li>Sélectionner un lieu via le menu prévu à cet effet.</li> 
+                <li>Cliquer sur le bouton <strong>"Bloquer Jours"</strong>.</li> 
+                <li>Cliquer sur un ou plusieurs jours dans le calendrier : le.les jour(s) sélectionné(s) passe(nt) en rouge clair.
+                <li>Cliquer sur <strong>"Valider"</strong> pour confirmer le blocage.</li> 
+                <li>Confirmer dans la fenêtre pop-up.</li> 
+            </ol>
+            <p><strong>Conclusion :</strong> Les jours sélectionnés seront ajoutés en tant que <i>"Jour bloqué"</i> dans la base de données.</p>
+            <p>Les jours bloqués apparaîtront ensuite en rouge claire.</p>
+            <p><strong>À noter :</strong> il est possible de sélectionner des jours sur différents mois en même temps.</p>
+
+            <h3>DÉBLOQUER UN JOUR COMPLET :</h3>
+            <ol> 
+                <li>Sélectionner un lieu via le menu prévu à cet effet.</li> 
+                <li>Cliquer sur le bouton <strong>"Bloquer Jours"</strong>.</li> 
+                <li>Cliquer sur un ou plusieurs jours déjà bloqué dans le calendrier : le.les jour(s) sélectionné(s) passe(nt) en rouge clair.
+                <li>Cliquer sur <strong>"Valider"</strong> pour confirmer la suppression.</li> 
+                <li>Confirmer dans la fenêtre pop-up.</li> 
+            </ol>
+            <p><strong>Conclusion :</strong> Les jours déjà bloqués sélectionnés à nouveau seront supprimés de la base de données.</p>
+            <p><strong>Annuler ?</strong> Cliquez sur le bouton <strong>"Annuler"</strong> à côté de <strong>"Valider"</strong>, puis confirmez dans la fenêtre pop-up.</p>
     
             <h3>NETTOYER LES DONNÉES :</h3>
+            <p>Le nettoyage des données est a effectué une fois par mois, un message pop-up vous le rappelle à la génération de cette page. Le nettoyage permet de garder la base de données fluide et pas trop chargée.</p>
             <ol>
-                <li>Cliquer sur le bouton "Clear Datas" en haut de la page.</li>
+                <li>Cliquer sur le bouton <strong>"Clear Datas"</strong> en haut de la page.</li>
                 <li>Confirmer l'action.</li>
             </ol>
-            <p>Conclusion : Les données du mois précédent seront supprimées de la base de données.</p>
+            <p><strong>Conclusion :</strong> Les données du mois précédent seront supprimées de la base de données.</p>
             <p>Veillez à vérifier que les données du mois dernier n'apparaissent plus après cette opération.</p>
             <p><span class="attention-text">ATTENTION : NE JAMAIS CLIQUER SUR "CLEAR ALL DATAS", CELA SUPPRIME TOUTES LES DONNÉES DE LA BASE DE DONNÉES !             Une double confirmation est mise en place pour protéger et empêcher une erreur de clique.
             </span></p>
@@ -106,7 +177,12 @@
             <button id="btn-bandol">Bandol</button>
         </div>        
 
+        <div id="bloquer-jours-container" style="margin: 20px 0;">
+            <button id="bloquerJoursBtn" disabled>Bloquer Jours</button>
+          </div>          
+
        <!-- Bloc Calendrier -->
+        
 <div id="calendar-container">
     <div id="month-controls">
         <button id="prev-month">&#9664;</button>
@@ -135,13 +211,14 @@
 
 
     </main>
+</div>
 
 <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-firestore.js"></script>
 
 <script>
     // Configuration de Firebase
-       const firebaseConfig = {
+    const firebaseConfig = {
         apiKey: "AIzaSyC8ZeHFmccII2g6ziGomjP19biSVuyfWs4",
         authDomain: "les-soins-d-eva-dc7e0.firebaseapp.com",
         projectId: "les-soins-d-eva-dc7e0",
@@ -150,7 +227,6 @@
         appId: "1:211837916895:web:7e356d839f20ee36573b6a"
     };
 
-
     // Initialisation de Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
@@ -158,7 +234,6 @@
     // Rendre db accessible globalement
     window.db = db;
 </script>
-
 
 <script src="admin.js"></script>
 <script src="https://kit.fontawesome.com/cde74a57e6.js" crossorigin="anonymous"></script>
