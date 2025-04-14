@@ -1,51 +1,188 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-    // Fonction pour vérifier si la date est dans le mois précédent
-    function isDateInPreviousMonth(dateString) {
-        if (!dateString || typeof dateString !== 'string') {
-            console.error("La date est invalide ou manquante : ", dateString);
-            return false; // Retourner false si la date n'est pas valide
-        }
+// Ajout de la fonctionnalité "Bloquer Jours"
+let modeSelectionJours = false;
+let joursSelectionnes = [];
 
-        const [day, month, year] = dateString.split('-').map(num => parseInt(num, 10));
-        if (isNaN(day) || isNaN(month) || isNaN(year)) {
-            console.error("Le format de la date est invalide : ", dateString);
-            return false; // Retourner false si la date ne peut pas être analysée
-        }
+const bloquerJoursBtn = document.getElementById('bloquerJoursBtn');
 
-        const currentDate = new Date();
-        const currentMonth = currentDate.getMonth(); // 0 = janvier, 11 = décembre
-        const previousMonth = (currentMonth === 0) ? 11 : currentMonth - 1;
+// Création du bouton Annuler
+const annulerSelectionBtn = document.createElement("button");
+annulerSelectionBtn.id = "annulerSelectionBtn";
+annulerSelectionBtn.textContent = "Annuler";
+annulerSelectionBtn.style.display = "none";
+annulerSelectionBtn.className = bloquerJoursBtn.className; // même style
 
-        // Créer un objet Date à partir de la date extraite
-        const dateToCheck = new Date(year, month - 1, day);
+bloquerJoursBtn.parentNode.insertBefore(annulerSelectionBtn, bloquerJoursBtn.nextSibling);
 
-        // Comparer le mois et l'année
-        return dateToCheck.getMonth() === previousMonth && dateToCheck.getFullYear() === currentDate.getFullYear();
+// Active le bouton seulement si un lieu est sélectionné
+const observerLocation = new MutationObserver(() => {
+    if (selectedLocation) {
+        bloquerJoursBtn.disabled = false;
+    } else {
+        bloquerJoursBtn.disabled = true;
     }
+});
+observerLocation.observe(document.body, { childList: true, subtree: true });
 
+// Clic sur le bouton "Bloquer Jours"
+bloquerJoursBtn.addEventListener('click', () => {
+    if (!modeSelectionJours) {
+        modeSelectionJours = true;
+        bloquerJoursBtn.textContent = "Valider";
+        annulerSelectionBtn.style.display = "inline-block";
+        rendreJoursCliquables();
+    } else {
+        const confirmation = confirm("⚠️ Confirmez-vous les actions sur les jours sélectionnés ?");
+        if (confirmation) {
+            joursSelectionnes.forEach(jour => {
+                const formattedDate = jour;
+
+                // Vérifie si la date existe déjà dans Firebase
+                window.db.collection("blockedSlots")
+                    .where("Date", "==", formattedDate)
+                    .where("Lieu", "==", selectedLocation)
+                    .where("Text", "==", "Jour bloqué")
+                    .get()
+                    .then(snapshot => {
+                        if (!snapshot.empty) {
+                            // Jour déjà bloqué → SUPPRIMER
+                            snapshot.forEach(doc => {
+                                window.db.collection("blockedSlots").doc(doc.id).delete().then(() => {
+                                    console.log(`🗑️ Supprimé : ${formattedDate}`);
+                                });
+                            });
+                        } else {
+                            // Jour pas encore bloqué → AJOUTER
+                            window.db.collection("blockedSlots").add({
+                                Date: formattedDate,
+                                Lieu: selectedLocation,
+                                Text: "Jour bloqué"
+                            }).then(() => {
+                                console.log(`✅ Bloqué : ${formattedDate}`);
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error("🔥 Erreur Firebase : ", error);
+                    });
+            });
+
+            resetSelection();
+            updateCalendar();
+        }
+    }
+});
+
+// Clic sur "Annuler"
+annulerSelectionBtn.addEventListener('click', () => {
+    const confirmCancel = confirm("❌ Annuler la sélection de jours ?");
+    if (confirmCancel) {
+        resetSelection();
+    }
+});
+
+function rendreJoursCliquables() {
+    joursSelectionnes = [];
+    document.querySelectorAll('.jour').forEach(cell => {
+        cell.classList.add('jour-selectable');
+        cell.addEventListener('click', () => {
+            const date = cell.dataset.date;
+            if (!date) return;
+
+            if (joursSelectionnes.includes(date)) {
+                joursSelectionnes = joursSelectionnes.filter(d => d !== date);
+                cell.classList.remove('jour-selectionne');
+                console.log("🔄 Jour désélectionné :", date);
+            } else {
+                joursSelectionnes.push(date);
+                cell.classList.add('jour-selectionne');
+                console.log("✅ Jour sélectionné :", date);
+            }
+
+            console.log("📦 Jours sélectionnés actuellement :", joursSelectionnes);
+        });
+    });
+}
+
+function resetSelection() {
+    modeSelectionJours = false;
+    bloquerJoursBtn.textContent = "Bloquer Jours";
+    annulerSelectionBtn.style.display = "none";
+
+    document.querySelectorAll('.jour').forEach(cell => {
+        cell.classList.remove('jour-selectable');
+        cell.classList.remove('jour-selectionne');
+    });
+
+    joursSelectionnes = [];
+}
+
+    // Fonction pour vérifier si la date est dans le mois précédent
+    function isDateInPreviousMonth(dateValue) {
+        let dateToCheck;
+    
+        if (!dateValue) {
+            console.error("❌ Date manquante :", dateValue);
+            return false;
+        }
+    
+        if (typeof dateValue === 'string') {
+            const [day, month, year] = dateValue.split('-').map(num => parseInt(num, 10));
+            if (isNaN(day) || isNaN(month) || isNaN(year)) {
+                console.error("❌ Format de la date invalide :", dateValue);
+                return false;
+            }
+            dateToCheck = new Date(year, month - 1, day);
+        } else if (typeof dateValue === 'object' && typeof dateValue.toDate === 'function') {
+            // Firestore Timestamp
+            dateToCheck = dateValue.toDate();
+        } else if (dateValue instanceof Date) {
+            dateToCheck = dateValue;
+        } else {
+            console.error("❌ Format de date non pris en charge :", dateValue);
+            return false;
+        }
+    
+        const now = new Date();
+        const previousMonth = (now.getMonth() === 0) ? 11 : now.getMonth() - 1;
+        const yearOfPreviousMonth = (now.getMonth() === 0) ? now.getFullYear() - 1 : now.getFullYear();
+    
+        return (
+            dateToCheck.getMonth() === previousMonth &&
+            dateToCheck.getFullYear() === yearOfPreviousMonth
+        );
+    }
+    
         // Fonction pour supprimer les données du mois précédent dans les 3 collections
         async function clearPreviousMonthData() {
             const collections = ['reservationDetails', 'non-reservable', 'blockedSlots'];
-
-            // Parcourir chaque collection
+        
             for (let collection of collections) {
+                console.log(`🔍 Lecture de la collection : ${collection}`);
                 const snapshot = await window.db.collection(collection).get();
-                
+                console.log(`📄 Nombre de documents récupérés : ${snapshot.size}`);
+        
                 snapshot.forEach(doc => {
                     const data = doc.data();
-                    const date = data['date']; // On récupère la date sous le champ "date"
-                    
+                    const date = data['date'] || data['Date'];
+                    console.log(`🧪 Lecture date: ${date} | Doc ID: ${doc.id} | Collection: ${collection}`);
+
+        
+                    console.log(`➡️ Doc ID: ${doc.id} | Date: ${date}`);
+        
                     if (date && isDateInPreviousMonth(date)) {
-                        // Si la date est valide et du mois précédent, on supprime le document
-                        doc.ref.delete();
+                        console.log(`🗑️ Suppression du document ${doc.id}`);
+                        doc.ref.delete().catch(error => {
+                            console.error(`❌ Erreur lors de la suppression du doc ${doc.id} :`, error);
+                        });
                     } else {
-                        console.log(`Aucune suppression pour ${doc.id} - Date non valide ou pas dans le mois précédent.`);
+                        console.log(`⏭️ Pas de suppression pour ${doc.id}`);
                     }
                 });
             }
         }
-
+        
         // Ajout d'un événement sur le bouton "Clear Datas"
         document.getElementById('clear-data-btn').addEventListener('click', async () => {
             const confirmDelete = confirm('Voulez-vous vraiment supprimer les données du mois précédent ?');
@@ -185,6 +322,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
+
     // Formater la date en "DD-MM-YYYY"
     function formatDate(date) {
         let d = date.getDate();
@@ -192,6 +330,36 @@ document.addEventListener("DOMContentLoaded", function () {
         let y = date.getFullYear();
         return `${d < 10 ? '0' + d : d}-${m < 10 ? '0' + m : m}-${y}`;
     }
+
+    function surlignerJoursBloques() {
+        const db = window.db;
+        const location = selectedLocation;
+        const buttons = document.querySelectorAll(".day-button");
+    
+        if (!location || buttons.length === 0) return;
+    
+        let datesAffichees = Array.from(buttons).map(btn => btn.dataset.date);
+    
+        db.collection("blockedSlots")
+            .where("Lieu", "==", location)
+            .where("Text", "==", "Jour bloqué")
+            .get()
+            .then(snapshot => {
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const dateBloquee = data.Date;
+    
+                    buttons.forEach(btn => {
+                        if (btn.dataset.date === dateBloquee) {
+                            btn.classList.add("jour-bloque");
+                        }
+                    });
+                });
+            })
+            .catch(error => {
+                console.error("Erreur Firebase dans surlignerJoursBloques :", error);
+            });
+    }    
 
     // Afficher le calendrier
     function updateCalendar() {
@@ -237,20 +405,39 @@ document.addEventListener("DOMContentLoaded", function () {
             dayButton.textContent = i;
             dayButton.dataset.date = formattedDate;
 
-            // Gestion de la sélection d'un jour
             dayButton.addEventListener("click", function () {
+                const selectedDate = this.dataset.date;
+            
+                if (modeSelectionJours) {
+                    if (joursSelectionnes.includes(selectedDate)) {
+                        joursSelectionnes = joursSelectionnes.filter(d => d !== selectedDate);
+                        this.classList.remove("jour-selectionne");
+                    } else {
+                        joursSelectionnes.push(selectedDate);
+                        this.classList.add("jour-selectionne");
+                    }
+                    return;
+                }
+            
+                // Mode normal (sélection simple)
                 document.querySelectorAll(".day-button").forEach(btn => btn.classList.remove("selected"));
                 this.classList.add("selected");
-
-                // Vérifier si un bouton de lieu est sélectionné avant d'afficher le tableau
-                if ((document.getElementById("btn-paris").classList.contains("selected") || document.getElementById("btn-bandol").classList.contains("selected")) && document.querySelector('.day-button.selected')) {
+            
+                if ((document.getElementById("btn-paris").classList.contains("selected") ||
+                     document.getElementById("btn-bandol").classList.contains("selected")) &&
+                     document.querySelector('.day-button.selected')) {
                     showTable(this.dataset.date);
                 }
-
             });
+            
+            if (modeSelectionJours && joursSelectionnes.includes(formattedDate)) {
+                dayButton.classList.add("jour-selectionne");
+            }            
 
             calendarContainer.appendChild(dayButton);
         }
+
+        surlignerJoursBloques();
     }
 
     // Vérifier et bloquer les créneaux en fonction de la sélection du lieu
@@ -443,15 +630,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
 
-         // Fonction pour mettre à jour l'UI avec les données du créneau
-        function updateSlotUI(time, status, info) {
-            const slotElement = document.querySelector(`.slot[data-time="${time}"]`);
-            if (slotElement) {
-                slotElement.querySelector('.status').textContent = status;
-                slotElement.querySelector('.client-info').innerHTML = info;
-            }
-        }
-    
         horaires.forEach(async (time) => {
             let slotStatus = 'Libre';
             let clientInfo = '';
