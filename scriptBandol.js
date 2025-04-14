@@ -182,7 +182,6 @@ document.addEventListener("DOMContentLoaded", function () {
     function disableReservedSlots(selectedDate) {
         const selectedLocation = localStorage.getItem("location") || "4, bd Victor Hugo 83150 Bandol";
     
-        // Références aux collections Firestore
         const reservationsRef = db.collection("reservationDetails");
         const blockedSlotsRef = db.collection("blockedSlots");
         const nonReservableRef = db.collection("non-reservable");
@@ -193,9 +192,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 .where("location", "==", selectedLocation)
                 .get(),
             blockedSlotsRef
-                .where("date", "==", selectedDate)
-                .where("location", "==", selectedLocation)
-                .get(),
+                .where("Lieu", "==", selectedLocation)
+                .get(), // 👈 on récupère tous les jours bloqués de ce lieu
             nonReservableRef
                 .where("date", "==", selectedDate)
                 .where("location", "==", selectedLocation)
@@ -206,6 +204,21 @@ document.addEventListener("DOMContentLoaded", function () {
             const blockedSlots = blockedSlotsSnapshot.docs.map(doc => doc.data().creneau);
             const nonReservableSlots = nonReservableSnapshot.docs.map(doc => doc.data().time);
     
+            // 🔒 Désactivation des jours entièrement bloqués
+            blockedSlotsSnapshot.docs.forEach(doc => {
+                const data = doc.data();
+    
+                if (data.Text === "Jour bloqué" && data.Lieu === selectedLocation && data.Date) {
+                    const blockedDayButton = document.querySelector(`.day-button[data-date="${data.Date}"]`);
+                    if (blockedDayButton) {
+                        blockedDayButton.disabled = true;
+                        blockedDayButton.title = "Jour bloqué par l'administration";
+                        console.log(`🔒 Bouton désactivé pour le jour ${data.Date}`);
+                    }
+                }
+            });
+    
+            // ⏱ Désactivation des créneaux
             const allSlotsForSelectedDate = document.querySelectorAll(".slot");
     
             allSlotsForSelectedDate.forEach(slot => {
@@ -231,7 +244,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             });
     
-            // Vérifier si tous les créneaux sont bloqués/réservés/non-réservables
+            // 🛑 Désactiver le bouton du jour si TOUS les créneaux sont indisponibles
             const allSlotsAreBlocked = Array.from(allSlotsForSelectedDate).every(slot => {
                 const slotTime = slot.textContent.trim();
                 return reservedSlots.includes(slotTime) ||
@@ -239,17 +252,17 @@ document.addEventListener("DOMContentLoaded", function () {
                        nonReservableSlots.includes(slotTime);
             });
     
-            // Désactiver le bouton du jour si tous les créneaux sont bloqués
             const dayButton = document.querySelector(`.day-button[data-date="${selectedDate}"]`);
-            if (dayButton) {
-                dayButton.disabled = allSlotsAreBlocked;
+            if (dayButton && allSlotsAreBlocked) {
+                dayButton.disabled = true;
+                dayButton.title = "Tous les créneaux sont indisponibles";
             }
         })
         .catch(error => {
-            console.error("Erreur lors de la récupération des créneaux :", error);
+            console.error("🔥 Erreur lors de la récupération des créneaux :", error);
         });
-    }        
-    
+    }
+            
 
     // Masquer les créneaux au chargement
     document.getElementById("slots").style.display = 'none';
