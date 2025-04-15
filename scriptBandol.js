@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
         window.history.replaceState(null, "", window.location.pathname);
     }, 100);
 
-
+    fetchAndStoreFirebaseData()
 
     // Définition des prix des soins
     var prixSoin = {
@@ -164,105 +164,151 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    function showSlots() {
-        var slots = document.getElementById("slots");
-    
-        slots.classList.remove("hidden");
-        slots.style.display = "block";
-        slots.style.opacity = "0"; 
-        slots.style.transform = "translateY(40px)"; 
-    
-        setTimeout(() => {
-            slots.style.transition = "opacity 0.6s ease-out, transform 1.1s ease-out";
-            slots.style.opacity = "1";
-            slots.style.transform = "translateY(0)";
-        }, 50);
-    }    
-
-    function disableReservedSlots(selectedDate) {
+    function fetchAndStoreFirebaseData() {
         const selectedLocation = localStorage.getItem("location") || "4, bd Victor Hugo 83150 Bandol";
+    
+        // 🔍 Fonction utilitaire pour gérer les deux formats de nom de champ
+        const queryWithLocation = (ref) => {
+            return Promise.all([
+                ref.where("location", "==", selectedLocation).get(),
+                ref.where("Lieu", "==", selectedLocation).get()
+            ]).then(([locSnap, lieuSnap]) => [...locSnap.docs, ...lieuSnap.docs]);
+        };
+    
+        // Fonction de formatage
+        const formatDoc = (doc) => {
+            const data = doc.data();
+            return {
+                location: data.location || data.Lieu || "",
+                date: data.date || data.Date || "",
+                creneau: data.creneau || data.time || "",
+                text: data.Text || ""
+            };
+        };
     
         const reservationsRef = db.collection("reservationDetails");
         const blockedSlotsRef = db.collection("blockedSlots");
         const nonReservableRef = db.collection("non-reservable");
     
         Promise.all([
-            reservationsRef
-                .where("date", "==", selectedDate)
-                .where("location", "==", selectedLocation)
-                .get(),
-            blockedSlotsRef
-                .where("Lieu", "==", selectedLocation)
-                .get(), // 👈 on récupère tous les jours bloqués de ce lieu
-            nonReservableRef
-                .where("date", "==", selectedDate)
-                .where("location", "==", selectedLocation)
-                .get()
+            queryWithLocation(reservationsRef),
+            queryWithLocation(blockedSlotsRef),
+            queryWithLocation(nonReservableRef)
         ])
-        .then(([reservationsSnapshot, blockedSlotsSnapshot, nonReservableSnapshot]) => {
-            const reservedSlots = reservationsSnapshot.docs.map(doc => doc.data().creneau);
-            const blockedSlots = blockedSlotsSnapshot.docs.map(doc => doc.data().creneau);
-            const nonReservableSlots = nonReservableSnapshot.docs.map(doc => doc.data().time);
+        .then(([resDocs, blockedDocs, nonReservableDocs]) => {
+            const formattedReservations = resDocs.map(formatDoc);
+            const formattedBlocked = blockedDocs.map(formatDoc);
+            const formattedNonReservable = nonReservableDocs.map(formatDoc);
     
-            // 🔒 Désactivation des jours entièrement bloqués
-            blockedSlotsSnapshot.docs.forEach(doc => {
-                const data = doc.data();
-    
-                if (data.Text === "Jour bloqué" && data.Lieu === selectedLocation && data.Date) {
-                    const blockedDayButton = document.querySelector(`.day-button[data-date="${data.Date}"]`);
-                    if (blockedDayButton) {
-                        blockedDayButton.disabled = true;
-                        blockedDayButton.title = "Jour bloqué par l'administration";
-                        console.log(`🔒 Bouton désactivé pour le jour ${data.Date}`);
-                    }
-                }
-            });
-    
-            // ⏱ Désactivation des créneaux
-            const allSlotsForSelectedDate = document.querySelectorAll(".slot");
-    
-            allSlotsForSelectedDate.forEach(slot => {
-                const slotTime = slot.textContent.trim();
-                const isBlocked = blockedSlots.includes(slotTime);
-                const isReserved = reservedSlots.includes(slotTime);
-                const isNonReservable = nonReservableSlots.includes(slotTime);
-    
-                if (isBlocked) {
-                    slot.classList.add("blocked");
-                    slot.classList.remove("reserved");
-                    slot.hidden = true;
-                    slot.disabled = true;
-                } else if (isReserved || isNonReservable) {
-                    slot.classList.add("reserved");
-                    slot.classList.remove("blocked");
-                    slot.disabled = true;
-                    slot.hidden = false;
-                } else {
-                    slot.classList.remove("reserved", "blocked");
-                    slot.disabled = false;
-                    slot.hidden = false;
-                }
-            });
-    
-            // 🛑 Désactiver le bouton du jour si TOUS les créneaux sont indisponibles
-            const allSlotsAreBlocked = Array.from(allSlotsForSelectedDate).every(slot => {
-                const slotTime = slot.textContent.trim();
-                return reservedSlots.includes(slotTime) ||
-                       blockedSlots.includes(slotTime) ||
-                       nonReservableSlots.includes(slotTime);
-            });
-    
-            const dayButton = document.querySelector(`.day-button[data-date="${selectedDate}"]`);
-            if (dayButton && allSlotsAreBlocked) {
-                dayButton.disabled = true;
-                dayButton.title = "Tous les créneaux sont indisponibles";
-            }
+            // 💾 Stockage local
+            localStorage.setItem("reservationDetails", JSON.stringify(formattedReservations));
+            localStorage.setItem("blockedSlots", JSON.stringify(formattedBlocked));
+            localStorage.setItem("nonReservable", JSON.stringify(formattedNonReservable));
         })
         .catch(error => {
-            console.error("🔥 Erreur lors de la récupération des créneaux :", error);
+            console.error("❌ Erreur lors du chargement Firebase :", error);
         });
     }
-            
+                
+    function showSlots() {
+        var slotsContainer = document.getElementById("slots");
+    
+        slotsContainer.classList.remove("hidden");
+        slotsContainer.style.display = "block";
+        slotsContainer.style.opacity = "0";
+        slotsContainer.style.transform = "translateY(40px)";
+    
+        // D'abord, on reset les tailles
+        document.querySelectorAll(".slot").forEach(slot => {
+            slot.style.width = ""; // reset
+        });
+    
+        // On compte les créneaux visibles
+        const visibleSlots = Array.from(document.querySelectorAll(".slot"))
+            .filter(slot => !slot.hidden);
+    
+        if (visibleSlots.length <= 4) {
+            visibleSlots.forEach(slot => {
+                slot.style.width = "50%";
+            });
+        }
+    
+        setTimeout(() => {
+            slotsContainer.style.transition = "opacity 0.6s ease-out, transform 1.1s ease-out";
+            slotsContainer.style.opacity = "1";
+            slotsContainer.style.transform = "translateY(0)";
+        }, 50);
+    }
+      
+
+    function applyBlockedDatesAndSlots() {
+        const blockedSlots = JSON.parse(localStorage.getItem("blockedSlots") || "[]");
+    
+        blockedSlots.forEach(item => {
+            if (item.text === "Jour bloqué" && item.date) {
+                const dayButton = document.querySelector(`.day-button[data-date="${item.date}"]`);
+                if (dayButton) {
+                    dayButton.disabled = true;
+                    dayButton.title = "Jour bloqué par l'administration";
+                    dayButton.classList.add("disabled-day");
+                }
+            }
+        });
+    }    
+
+    function bindDayClicks() {
+        document.querySelectorAll(".day-button").forEach(btn => {
+            btn.addEventListener("click", function () {
+                if (this.disabled) return;
+    
+                const selectedDate = this.getAttribute("data-date");
+                localStorage.setItem("date", selectedDate);
+    
+                // ✅ Visuel sélection
+                document.querySelectorAll(".day-button.selected").forEach(b =>
+                    b.classList.remove("selected")
+                );
+                this.classList.add("selected");
+    
+                // Reset slots
+                document.querySelectorAll(".slot").forEach(slot => {
+                    slot.classList.remove("blocked", "reserved");
+                    slot.disabled = false;
+                    slot.hidden = false;
+                });
+    
+                const blockedSlots = JSON.parse(localStorage.getItem("blockedSlots") || "[]");
+                const reservationDetails = JSON.parse(localStorage.getItem("reservationDetails") || "[]");
+                const nonReservable = JSON.parse(localStorage.getItem("nonReservable") || "[]");
+    
+                document.querySelectorAll(".slot").forEach(slot => {
+                    const slotTime = slot.textContent.trim();
+    
+                    const isBlocked = blockedSlots.some(doc =>
+                        doc.date === selectedDate && doc.creneau === slotTime
+                    );
+                    const isReserved = reservationDetails.some(doc =>
+                        doc.date === selectedDate && doc.creneau === slotTime
+                    );
+                    const isNonReservable = nonReservable.some(doc =>
+                        doc.date === selectedDate && doc.creneau === slotTime
+                    );
+    
+                    if (isBlocked) {
+                        slot.classList.add("blocked");
+                        slot.hidden = true;
+                        slot.disabled = true;
+                    } else if (isReserved || isNonReservable) {
+                        slot.classList.add("reserved");
+                        slot.disabled = true;
+                    }
+                });
+    
+                showSlots();
+            });
+        });
+    }    
+                    
 
     // Masquer les créneaux au chargement
     document.getElementById("slots").style.display = 'none';
@@ -280,13 +326,11 @@ document.addEventListener("DOMContentLoaded", function () {
     
         var firstDayOfMonth = new Date(year, month, 1).getDay();
         var daysInMonth = new Date(year, month + 1, 0).getDate();
-        
-        // Détecte si l'écran est plus petit que 600px
         var isMobile = window.matchMedia("(max-width: 600px)").matches;
     
-        // Change les noms des jours si l'écran est petit
-        var weekdays = isMobile ? ['Lun.', 'Mar.', 'Mer.', 'Jeu.', 'Ven.', 'Sam.', 'Dim.'] : 
-                                  ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
+        var weekdays = isMobile
+            ? ['Lun.', 'Mar.', 'Mer.', 'Jeu.', 'Ven.', 'Sam.', 'Dim.']
+            : ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
     
         weekdays.forEach(day => {
             var dayHeader = document.createElement('div');
@@ -296,7 +340,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     
         var adjustedFirstDay = (firstDayOfMonth === 0) ? 6 : firstDayOfMonth - 1;
-    
         for (let i = 0; i < adjustedFirstDay; i++) {
             var emptyDay = document.createElement('div');
             calendarContainer.appendChild(emptyDay);
@@ -305,6 +348,7 @@ document.addEventListener("DOMContentLoaded", function () {
         var today = new Date();
         today.setHours(0, 0, 0, 0);
     
+        // 🔘 Création des jours cliquables
         for (let i = 1; i <= daysInMonth; i++) {
             var dayButton = document.createElement('button');
             dayButton.classList.add('day-button');
@@ -313,52 +357,22 @@ document.addEventListener("DOMContentLoaded", function () {
             var dayDate = new Date(year, month, i);
             dayDate.setHours(0, 0, 0, 0);
     
-            // Format : Jour Mois Année
             var formattedDate = `${("0" + i).slice(-2)}-${("0" + (month + 1)).slice(-2)}-${year}`;
-    
-            dayButton.setAttribute("data-date", formattedDate); 
+            dayButton.setAttribute("data-date", formattedDate);
     
             if (dayDate < today) {
                 dayButton.classList.add("non-clickable");
                 dayButton.disabled = true;
             }
     
-            dayButton.addEventListener('click', function(event) {
-                if (dayButton.disabled) {
-                    event.preventDefault();  
-                    event.stopImmediatePropagation(); 
-                }
-            });
-    
-            calendarContainer.appendChild(dayButton);
-    
-            // ✅ Ajout de l'événement pour stocker la date sélectionnée
-            dayButton.addEventListener("click", function() {
-                // Supprimer la classe "selected" des autres boutons
-                document.querySelectorAll(".day-button.selected").forEach(button => button.classList.remove("selected"));
-                this.classList.add("selected");
-    
-                // Vérifier si le bouton est désactivé
-                if (this.classList.contains("non-clickable")) return;
-    
-                // ✅ Mettre à jour la date sélectionnée
-                var selectedDate = this.getAttribute("data-date");
-                localStorage.setItem("date", selectedDate); // Stocke la date sous la clé "date"
-    
-                checkConditions();
-                showSlots();
-                disableReservedSlots(selectedDate, localStorage.getItem("location") || "4, bd Victor Hugo 83150 Bandol");
-            });
-            
             calendarContainer.appendChild(dayButton);
         }
     
-        document.querySelectorAll('.day-button').forEach(dayButton => {
-            var selectedDate = dayButton.getAttribute("data-date");
-            disableReservedSlots(selectedDate);
-        });
+        // ✅ Après TOUT est affiché : bind les clics + appliquer les désactivations
+        bindDayClicks(); // on sépare proprement la logique de clics
+        applyBlockedDatesAndSlots(); // maintenant ça peut trouver les boutons
     }
-    
+                
     
     slots.forEach(slot => {
         slot.addEventListener("click", () => {
@@ -408,12 +422,45 @@ document.addEventListener("DOMContentLoaded", function () {
     prevMonthButton.addEventListener("click", () => {
         currentMonth.setMonth(currentMonth.getMonth() - 1);
         updateCalendar();
+        updateNavigationButtons();
     });
 
     nextMonthButton.addEventListener("click", () => {
-        currentMonth.setMonth(currentMonth.getMonth() + 1);
-        updateCalendar();
+        const today = new Date();
+        const maxMonth = new Date(today.getFullYear(), today.getMonth() + 3, 0); // Dernier jour du mois + 2 mois (fin juin)
+    
+        const nextMonth = new Date(currentMonth);
+        nextMonth.setMonth(currentMonth.getMonth() + 1); // Passer au mois suivant
+    
+        // Vérifie si on ne dépasse pas la limite (fin juin)
+        if (nextMonth <= maxMonth) {
+            currentMonth = nextMonth;
+            updateCalendar(); // Met à jour le calendrier
+        } 
+
+        updateNavigationButtons(); // Vérifie l'état des boutons après la mise à jour
     });
+    
+    function updateNavigationButtons() {
+        const today = new Date();
+        const maxMonth = new Date(today.getFullYear(), today.getMonth() + 3, 0); // Dernier jour du mois + 2 mois (fin juin)
+    
+        // Vérifie si on est sur la fin du mois limite (juin)
+        const isAtMax = currentMonth.getFullYear() === maxMonth.getFullYear() &&
+                        currentMonth.getMonth() === maxMonth.getMonth();
+    
+        // Désactive le bouton en ajoutant une classe "disabled" si on est en juin
+        if (isAtMax) {
+            nextMonthButton.classList.add("disabled");
+        } else {
+            nextMonthButton.classList.remove("disabled");
+        }
+    }
+    
+    updateNavigationButtons(); // Initialisation de l'état des boutons au chargement de la page
+    
+    
+    
 
     updateCalendar();
 
