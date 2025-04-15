@@ -5299,6 +5299,14 @@ body {
     transition: color 0.3s ease-in-out;
 }
 
+/* Style pour le bouton désactivé */
+.disabled {
+    opacity: 0.5;
+    color: grey !important;
+    cursor: not-allowed !important; 
+}
+
+
 #month-controls button:hover {
     color: rgb(193, 174, 107);
 }
@@ -5308,7 +5316,7 @@ body {
     text-transform: uppercase;
     color: rgb(106, 83, 78);
     font-size: 25px;
-    font-family: 'Audrey-Regular';
+    font-family: 'ClassicoURW';
 }
 
 /* Conteneur du calendrier */
